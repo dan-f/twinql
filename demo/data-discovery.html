@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>twinql demos</title>
+    <script src="/build/bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"></script>
+    <script defer src="app.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <h1><a href="index.html">twinql demos</a></h1>
+    <nav>
+      <ul>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="social.html">Social Graph</a></li>
+        <li><a href="data-discovery.html">Data Discovery</a></li>
+        <li><a href="error-handling.html">Error Handling</a></li>
+      </ul>
+    </nav>
+    <div id='content-container'>
+
+      <div id="query-container">
+        <h2>Query</h2>
+
+<div id="editor">@prefix book  http://www.w3.org/2002/01/bookmark#
+@prefix dc    http://purl.org/dc/elements/1.1/
+@prefix rdf   http://www.w3.org/1999/02/22-rdf-syntax-ns#
+@prefix solid http://www.w3.org/ns/solid/terms#
+
+https://dan-f.databox.me/profile/card#me {
+  solid.publicTypeIndex => ( rdf.type solid.TypeRegistration
+                             solid.forClass book.Bookmark ) {
+    solid.instance => ( rdf.type book.Bookmark ) {
+      dc.title
+      dc.description
+      book.recalls
+      book.hasTopic
+    }
+  }
+}
+</div>
+
+      </div>
+
+      <div id="response-container">
+        <h2>Response</h2>
+        <pre id="response-area"></pre>
+      </div>
+    </div>
+  </body>
+</html>
