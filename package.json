@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "A graph query language for the semantic web",
   "main": "lib/index.js",
+  "files": [
+    "lib",
+    "build"
+  ],
   "scripts": {
     "start": "npm run demo",
     "test": "echo \"Error: no test specified\" && exit 1",
