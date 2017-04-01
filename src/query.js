@@ -292,7 +292,6 @@ class QueryEngine {
  */
 function formatNode (node) {
   const { datatype, language, value } = node
-  console.log(datatype, language, value)
   if (!datatype && !language) {
     return value
   }
