@@ -5,6 +5,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"></script>
     <script defer src="app.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="viewport" content="width=device-width">
   </head>
   <body>
     <h1><a href="../">twinql demos</a></h1>
@@ -16,12 +17,12 @@
         <li><a href="error-handling">Error Handling</a></li>
       </ul>
     </nav>
-    <div id='content-container'>
+    <div id='main'>
 
-      <div id="query-container">
+      <div class="code-container">
         <h2>Query</h2>
 
-<div id="editor">@prefix foaf http://xmlns.com/foaf/0.1/
+<div id="editor" class='code-box'>@prefix foaf http://xmlns.com/foaf/0.1/
 
 https://dan-f.databox.me/profile/card#me {
   foaf.name
@@ -30,9 +31,9 @@ https://dan-f.databox.me/profile/card#me {
 
       </div>
 
-      <div id="response-container">
+      <div class="code-container">
         <h2>Response</h2>
-        <pre id="response-area"></pre>
+        <pre id="response-area" class="code-box"></pre>
       </div>
     </div>
   </body>
