@@ -8,6 +8,7 @@
     "build"
   ],
   "scripts": {
+    "postinstall": "npm run build",
     "start": "npm run demo",
     "test": "echo \"Error: no test specified\" && exit 1",
     "docs": "jsdoc src -r -c conf.json -d docs",
