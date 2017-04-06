@@ -1,9 +1,7 @@
 import Backend from './backend'
-import { toRdflibNode } from './rdflib-helpers'
-import { nodeSet } from '../node'
 
 /**
- * Implements a backend for a single in-memory graph store.
+ * Implements a backend for a single in-memory graph.
  * @module
  */
 
@@ -14,37 +12,23 @@ import { nodeSet } from '../node'
 class InMemoryBackend extends Backend {
   /**
    * Create an InMemoryBackend
-   * @param {external:rdflib.IndexedFormula} store - the local graph
+   * @param {module:rdf/graph~Graph} graph - the local graph
    */
-  constructor (store) {
+  constructor (graph) {
     super()
-    this.store = store
+    this.graph = graph
   }
 
   async getObjects (subject, predicate) {
-    if (predicate == null) debugger
-    return nodeSet(
-      this.store.match(toRdflibNode(subject), toRdflibNode(predicate))
-        .map(st => st.object)
-    )
+    return this.graph.match({ subject, predicate })
   }
 
   async getSubjects (predicate, object, namedGraph) {
-    return nodeSet(
-      this.store.statementsMatching(
-        null,
-        toRdflibNode(predicate),
-        toRdflibNode(object),
-        namedGraph ? toRdflibNode(namedGraph) : null
-      ).map(st => st.subject)
-    )
-  }
-
-  async getNodesByValue (value) {
-    const node = toRdflibNode(value)
-    const subjectsMatching = this.store.match(node).map(st => st.subject)
-    const objectsMatching = this.store.match(null, null, node).map(st => st.object)
-    return nodeSet(subjectsMatching.concat(objectsMatching))
+    return this.graph.match({
+      predicate,
+      object,
+      graph: namedGraph ? namedGraph : null
+    })
   }
 }
 

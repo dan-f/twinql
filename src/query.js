@@ -1,6 +1,7 @@
 import { formatErrorForResponse, isInlineError, QueryError } from './errors'
-import { Node, nodeSet } from './node'
+import { Node, nodeSet } from './rdf/node'
 import parse from './lang/parser'
+import { iterObj } from './util'
 
 /**
  * The query module
@@ -97,9 +98,9 @@ class QueryEngine {
 
   /**
    * Get the set of nodes matching a nodeSpecifier given the current context
-   * @param {module:node~NodeSet} context - the set of context nodes
+   * @param {module:rdf/node~NodeSet} context - the set of context nodes
    * @param {module:lang/ast.AST} nodeSpec - the nodeSpecifier AST node
-   * @returns {Promise<module:node~NodeSet>} the set of matching nodes
+   * @returns {Promise<module:rdf/node~NodeSet>} the set of matching nodes
    */
   async specifiedNodes (context, nodeSpec) {
     switch (nodeSpec.type) {
@@ -117,11 +118,11 @@ class QueryEngine {
 
   /**
    * Returns the set of nodes which match a match list given the current context
-   * @param {module:node~NodeSet} context - the set of context nodes
+   * @param {module:rdf/node~NodeSet} context - the set of context nodes
    * @param {String} contextType - the kind of context; either "graph" or
    * "subject"
    * @param {Array<module:lang/ast.AST>} matchList - the list of AST match nodes
-   * @returns {Promise<module:node~NodeSet>} the set of nodes matching the match list
+   * @returns {Promise<module:rdf/node~NodeSet>} the set of nodes matching the match list
    */
   async matchesMatchList (context, contextType, matchList) {
     return (await all(
@@ -131,11 +132,11 @@ class QueryEngine {
 
   /**
    * Returns the set of nodes which match a given match given the current context
-   * @param {module:node~NodeSet} context - the set of context nodes
+   * @param {module:rdf/node~NodeSet} context - the set of context nodes
    * @param {String} contextType - the kind of context; either "graph" or
    * "subject"
    * @param {module:lang/ast.AST} match - the match AST node
-   * @returns {Promise<module:node~NodeSet>} the set of nodes matching the
+   * @returns {Promise<module:rdf/node~NodeSet>} the set of nodes matching the
    * current match
    */
   async matches (context, contextType, match) {
@@ -177,7 +178,7 @@ class QueryEngine {
   /**
    * Gets the response graph for a specific traversal (i.e. list of edges and
    * subqueries) for a given node
-   * @param {module:node.Node} node - the node to traverse
+   * @param {module:rdf/node.Node} node - the node to traverse
    * @param {module:lang/ast.AST} traversal - the traversal AST node
    * @returns {Promise<module:query~Response>} the response graph for the current node
    */
@@ -221,25 +222,26 @@ class QueryEngine {
 
   /**
    * Traverses a single edge with no subquery on a given node
-   * @param {module:node.Node} node - the node to traverse
+   * @param {module:rdf/node.Node} node - the node to traverse
    * @param {module:lang/ast.AST} selectorNode - the selector AST node
    * @returns {Promise<Object>} the response for the edge traversal
    */
   async traverseLeafSelector (node, selectorNode) {
     const edge = this.toNode(selectorNode.predicate).get('value')
-    const objects = (await backend.getObjects(node, this.toNode(selectorNode.predicate)))
+    const objects = (await this.backend.getObjects(node, this.toNode(selectorNode.predicate)))
+      .toJS()
       .map(formatNode)
     return { [this.toPrefixed(edge)]: objects }
   }
 
   /**
    * Traverses a single edge with a subquery on a given node
-   * @param {module:node.Node} node - the node to traverse
+   * @param {module:rdf/node.Node} node - the node to traverse
    * @param {module:lang/ast.AST} selectorNode - the selector AST node
    * @returns {Promise<Object>} the sub-response for the edge traversal
    */
   async traverseIntermediateSelector (node, selectorNode) {
-    const nodesMatchingEdge = await backend.getObjects(node, this.toNode(selectorNode.predicate))
+    const nodesMatchingEdge = await this.backend.getObjects(node, this.toNode(selectorNode.predicate))
     const edge = this.toNode(selectorNode.predicate).get('value')
     const subQueryResults = (await all(nodesMatchingEdge.map(async node => {
       return this.contextSensitiveQuery(node, selectorNode.contextSensitiveQuery)
@@ -248,9 +250,9 @@ class QueryEngine {
   }
 
   /**
-   * Converts an ID AST node to a {@link module:node.Node}
+   * Converts an ID AST node to a {@link module:rdf/node.Node}
    * @param {module:lang/ast.AST} ast - the AST node
-   * @returns {@link module:node.Node} the converted node
+   * @returns {@link module:rdf/node.Node} the converted node
    */
   toNode (ast) {
     const data = { termType: 'NamedNode' }
@@ -286,9 +288,9 @@ class QueryEngine {
 }
 
 /**
- * Converts a {@link module:node.Node} to a plain JSON-LD objectq to be included
+ * Converts a {@link module:rdf/node.Node} to a plain JSON-LD objectq to be included
  * in the response.
- * @param {module:node.Node} node
+ * @param {module:rdf/node.Node} node
  */
 function formatNode (node) {
   const { datatype, language, value } = node
@@ -303,17 +305,6 @@ function formatNode (node) {
     formatted['@language'] = language.value
   }
   return formatted
-}
-
-/**
- * Iterates over key, value pairs in an object
- * @param {Object} obj
- * @returns {Iterator<Array>} an iterator yielding arrays of the form [k, v]
- */
-function *iterObj (obj) {
-  for (let k of Object.keys(obj)) {
-    yield [k, obj[k]]
-  }
 }
 
 export default query

@@ -93,8 +93,6 @@ Response:
 
 ### Other cool things
 
-- Use an immutable indexed graph data structure for tracking and intersecting
-  the results of various queries
 - Create higher level tooling for offline-first querying and realtime updates
 - Create bindings for common UI libraries
   - e.g. connected React component
