@@ -10,15 +10,17 @@ const TIMEOUT = 5000
  * Fetches a named graph over HTTP, parses the body, and returns the
  * corresponding graph
  * @param {String} graphName - the name (URI) of the graph to fetch
+ * @param {String} [proxyUri=''] - the URI of a Solid agent
  * @returns {Promise<module:rdf/graph~Graph>} the fetched graph
  * @throws {module:errors~HttpError} An {@link module:errors~HttpError} may be
  * thrown if a non-2XX status code is returned
  */
-export async function fetchGraph (graphName) {
+export async function fetchGraph (graphName, proxyUri = '') {
   let response
   try {
     response = await Promise.race([
-      fetch(graphName, { headers: { 'accept': 'text/turtle' } }).then(throwIfBadStatus), // eslint-disable-line
+      fetch(proxyUri + graphName, { headers: { 'accept': 'text/turtle' } }) // eslint-disable-line
+        .then(throwIfBadStatus),
       new Promise((resolve, reject) => setTimeout(() => reject(new Error('Request timed out')), TIMEOUT))
     ])
   } catch (e) {
