@@ -33,7 +33,7 @@
     "webpack": "^2.3.2"
   },
   "dependencies": {
-    "babel-polyfill": "^6.23.0",
+    "babel-runtime": "^6.23.0",
     "immutable": "^4.0.0-rc.1",
     "isomorphic-fetch": "^2.2.1",
     "n3": "^0.9.1",
