@@ -39,11 +39,6 @@ class LdpBackend extends InMemoryBackend {
     return super.getSubjects(predicate, object, namedGraph)
   }
 
-  async getNodesByValue (value) {
-    await this.ensureGraphLoaded(getNamedGraph(value))
-    return super.getNodesByValue(value)
-  }
-
   /**
    * Load the named graph for the given node's url (if not already loaded) into the
    * backend's graph store.

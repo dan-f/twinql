@@ -43,15 +43,6 @@ class Backend {
     throw new NotImplementedError('getSubjects', this.className)
   }
 
-  /**
-   * Find nodes in the graph based on their value.
-   * @param {module:node~Node} value - the node with the value we wish to match
-   * @returns {Promise<module:node~NodeSet>}
-   */
-  async getNodesByValue (value) {
-    throw new NotImplementedError('getNodesByValue', this.className)
-  }
-
   on (eventName, handler) {
     if (this.eventHandlers[eventName]) {
       this.eventHandlers[eventName].push(handler)

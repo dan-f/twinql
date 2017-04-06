@@ -31,20 +31,13 @@ class InMemoryBackend extends Backend {
 
   async getSubjects (predicate, object, namedGraph) {
     return nodeSet(
-      this.store.statementsMatching(
+      this.store.match(
         null,
         toRdflibNode(predicate),
         toRdflibNode(object),
         namedGraph ? toRdflibNode(namedGraph) : null
       ).map(st => st.subject)
     )
-  }
-
-  async getNodesByValue (value) {
-    const node = toRdflibNode(value)
-    const subjectsMatching = this.store.match(node).map(st => st.subject)
-    const objectsMatching = this.store.match(null, null, node).map(st => st.object)
-    return nodeSet(subjectsMatching.concat(objectsMatching))
   }
 }
 
