@@ -8,7 +8,10 @@ const backend = new twinql.LdpBackend()
 
 runQuery()
 
-edit.on('change', runQuery)
+document.querySelector('#execute-query').addEventListener('click', (event) => {
+  event.preventDefault()
+  runQuery()
+})
 
 function runQuery () {
   const queryText = edit.getValue()

@@ -43,6 +43,10 @@ ul > li {
   }
 }
 
+#button-container {
+  margin: 5px;
+}
+
 #response-area {
   background-color: #fdf6e3;
   color: #313e42;
