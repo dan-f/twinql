@@ -13,8 +13,15 @@ import { parseQuads } from './rdf/quad'
  * thrown if a non-2XX status code is returned
  */
 export async function fetchGraph (graphName) {
-  const response = await fetch(graphName, { headers: { 'accept': 'text/turtle' } }) // eslint-disable-line
-    .then(throwIfBadStatus)
+  let response
+  try {
+    response = await fetch(graphName, { headers: { 'accept': 'text/turtle' } }) // eslint-disable-line
+      .then(throwIfBadStatus)
+  } catch (e) {
+    throw e.name === 'HttpError'
+      ? e
+      : new HttpError({ statusText: e.message, status: 0 })
+  }
   const text = await response.text()
   return Graph.fromQuads(await parseQuads(graphName, text))
 }
