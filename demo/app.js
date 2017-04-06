@@ -4,7 +4,7 @@ edit.setFontSize(14)
 edit.setBehavioursEnabled(true)
 edit.setTheme('ace/theme/solarized_light')
 
-const backend = new twinql.LdpBackend()
+const backend = new twinql.LdpBackend({ proxyUri: 'https://databox.me/,proxy?uri=' })
 
 runQuery()
 
