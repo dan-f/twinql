@@ -1,8 +1,6 @@
-import rdflib, { IndexedFormula } from 'rdflib'
-import { SolidWebClient } from 'solid-web-client'
-
+import Graph from '../graph'
 import InMemoryBackend from './in-memory-backend'
-import { toRdflibNode } from './rdflib-helpers'
+import { fetchGraph } from '../web'
 
 /**
  * Implements a backend which follows links in a [Linked Data Platform]{@link https://www.w3.org/TR/ldp/}
@@ -18,52 +16,51 @@ import { toRdflibNode } from './rdflib-helpers'
 class LdpBackend extends InMemoryBackend {
   /**
    * Create an LdpBackend
-   * @param {external:rdflib.IndexedFormula} [store = new {@link external:rdflib.IndexedFormula}] -
+   * @param {module:graph~Graph} [graph = new {@link module:graph~Graph}]
    */
-  constructor (store = new IndexedFormula()) {
-    super(store)
-    this.webClient = new SolidWebClient(rdflib)
+  constructor (graph = new Graph()) {
+    super(graph)
     this.lockedGraphs = new Set()
     this.on('queryDone', () => this.lockedGraphs.clear())
   }
 
   async getObjects (subject, predicate) {
-    await this.ensureGraphLoaded(getNamedGraph(subject))
+    await this.ensureGraphLoaded(getGraphName(subject))
     return super.getObjects(subject, predicate)
   }
 
-  async getSubjects (predicate, object, namedGraph) {
-    if (namedGraph) {
-      await this.ensureGraphLoaded(getNamedGraph(namedGraph))
+  async getSubjects (predicate, object, graphName) {
+    if (graphName) {
+      await this.ensureGraphLoaded(getGraphName(graphName))
     }
-    return super.getSubjects(predicate, object, namedGraph)
+    return super.getSubjects(predicate, object, graphName)
   }
 
   /**
    * Load the named graph for the given node's url (if not already loaded) into the
-   * backend's graph store.
-   * @param {String} namedGraph
+   * backend's graph graph.
+   * @param {String} graphName
    */
-  async ensureGraphLoaded (namedGraph) {
-    if (!namedGraph) {
+  async ensureGraphLoaded (graphName) {
+    if (!graphName) {
       return false
     }
-    if (this.lockedGraphs.has(namedGraph)) {
+    if (this.lockedGraphs.has(graphName)) {
       return true
     }
-    const graph = (await this.webClient.get(namedGraph)).parsedGraph()
-    this.lockedGraphs.add(namedGraph)
-    this.store.addAll(graph.statements)
+    const graph = await fetchGraph(graphName)
+    this.graph = this.graph.union(graph)
+    this.lockedGraphs.add(graphName)
     return true
   }
 }
 
 /**
  * Gets the resource url for an RDF node.
- * @param {external:rdflib.Node} node
+ * @param {module:node.Node} node
  * @returns {String} the url to the given resource
  */
-function getNamedGraph (node) {
+function getGraphName (node) {
   return node.termType === 'NamedNode'
     ? node.value.split('#')[0]
     : null

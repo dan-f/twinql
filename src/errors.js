@@ -9,6 +9,7 @@
 class LexError extends Error {
   constructor (message, line, col) {
     super(`${line}:${col}: ${message}`)
+    this.name = 'LexError'
   }
 }
 
@@ -16,30 +17,55 @@ class LexError extends Error {
  * Class of errors for when the lexer encounters an illegal character
  * @extends {module:errors~LexError}
  */
-export class IllegalCharacterError extends LexError {}
+export class IllegalCharacterError extends LexError {
+  constructor (...args) {
+    super(...args)
+    this.name = 'IllegalCharacterError'
+  }
+}
 
 /**
  * Class of errors for when the lexer unexpectedly reaches the end of the buffer
  * @extends {module:errors~LexError}
  */
-export class EndOfInputError extends LexError {}
+export class EndOfInputError extends LexError {
+  constructor (...args) {
+    super(...args)
+    this.name = 'EndOfInputError'
+  }
+}
 
 /**
  * Class of errors for when the lexer encounters an uncompleted token
  * @extends {module:errors~LexError}
  */
-export class UnterminatedTokenError extends LexError {}
+export class UnterminatedTokenError extends LexError {
+  constructor (...args) {
+    super(...args)
+    this.name = 'UnterminatedTokenError'
+  }
+}
 
 /**
  * Class of errors for when the lexer encounters a token which doesn't match the
  * syntax
  */
-export class UnrecognizedTokenError extends LexError {}
+export class UnrecognizedTokenError extends LexError {
+  constructor (...args) {
+    super(...args)
+    this.name = 'UnrecognizedTokenError'
+  }
+}
 
 /**
  * Class of errors for errors occurring during parsing
  */
-class ParseError extends Error {}
+class ParseError extends Error {
+  constructor (...args) {
+    super(...args)
+    this.name = 'ParseError'
+  }
+}
 
 /**
  * Class of errors for when the parser sees a token that doesn't follow the
@@ -58,13 +84,35 @@ export class UnexpectedTokenError extends ParseError {
       `but got token '${receivedToken.value}' of type ${receivedToken.type} ` +
       `at (${receivedToken.line}:${receivedToken.column})`
     )
+    this.name = 'UnexpectedTokenError'
   }
 }
 
 /**
  * Class of errors for errors occurring at query time
  */
-export class QueryError extends Error {}
+export class QueryError extends Error {
+  constructor (...args) {
+    super(...args)
+    this.name = 'QueryError'
+  }
+}
+
+export class HttpError extends Error {
+  constructor (response) {
+    super(response.statusText)
+    this.name = 'HttpError'
+    this.status = response.status
+    this.response = response
+  }
+}
+
+export class GraphError extends Error {
+  constructor (...args) {
+    super(...args)
+    this.name = 'GraphError'
+  }
+}
 
 /**
  * Class of errors for when a class that is meant to be 'abstract' (i.e. not
@@ -78,6 +126,7 @@ export class AbstractClassError extends Error {
    */
   constructor (className, message) {
     super(`<${className}> class is abstract and cannot be directly instantiated.  ${message}`)
+    this.name = 'AbstractClassError'
   }
 }
 
@@ -92,6 +141,7 @@ export class NotImplementedError extends Error {
    */
   constructor (methodName, className) {
     super(`${methodName} not implemented on ${className}`)
+    this.name = 'NotImplementedError'
   }
 }
 

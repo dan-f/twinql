@@ -34,8 +34,8 @@
   },
   "dependencies": {
     "immutable": "^4.0.0-rc.1",
-    "rdflib": "^0.14.0",
-    "solid-web-client": "^0.2.0",
+    "isomorphic-fetch": "^2.2.1",
+    "n3": "^0.9.1",
     "valid-url": "^1.0.9"
   }
 }

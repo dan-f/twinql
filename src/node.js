@@ -1,5 +1,4 @@
 import Immutable from 'immutable'
-import * as rdf from 'rdflib'
 
 /**
  * Provides immutable datatypes for dealing with RDF nodes.
@@ -25,7 +24,7 @@ import * as rdf from 'rdflib'
 
 /**
  * A union type for nodes in the graph
- * @typedef {(external:rdflib.Node|module:parsetree.Uri|module:parsetree.StringLiteral|module:node.NodeRecord)} NodeLike
+ * @typedef {(module:parsetree.Uri|module:parsetree.StringLiteral|module:node.NodeRecord)} NodeLike
  */
 
 /**

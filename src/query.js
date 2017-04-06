@@ -1,6 +1,7 @@
 import { formatErrorForResponse, isInlineError, QueryError } from './errors'
 import { Node, nodeSet } from './node'
 import parse from './lang/parser'
+import { iterObj } from './util'
 
 /**
  * The query module
@@ -227,7 +228,8 @@ class QueryEngine {
    */
   async traverseLeafSelector (node, selectorNode) {
     const edge = this.toNode(selectorNode.predicate).get('value')
-    const objects = (await backend.getObjects(node, this.toNode(selectorNode.predicate)))
+    const objects = (await this.backend.getObjects(node, this.toNode(selectorNode.predicate)))
+      .toJS()
       .map(formatNode)
     return { [this.toPrefixed(edge)]: objects }
   }
@@ -239,7 +241,7 @@ class QueryEngine {
    * @returns {Promise<Object>} the sub-response for the edge traversal
    */
   async traverseIntermediateSelector (node, selectorNode) {
-    const nodesMatchingEdge = await backend.getObjects(node, this.toNode(selectorNode.predicate))
+    const nodesMatchingEdge = await this.backend.getObjects(node, this.toNode(selectorNode.predicate))
     const edge = this.toNode(selectorNode.predicate).get('value')
     const subQueryResults = (await all(nodesMatchingEdge.map(async node => {
       return this.contextSensitiveQuery(node, selectorNode.contextSensitiveQuery)
@@ -303,17 +305,6 @@ function formatNode (node) {
     formatted['@language'] = language.value
   }
   return formatted
-}
-
-/**
- * Iterates over key, value pairs in an object
- * @param {Object} obj
- * @returns {Iterator<Array>} an iterator yielding arrays of the form [k, v]
- */
-function *iterObj (obj) {
-  for (let k of Object.keys(obj)) {
-    yield [k, obj[k]]
-  }
 }
 
 export default query
