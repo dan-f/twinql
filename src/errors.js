@@ -98,12 +98,26 @@ export class QueryError extends Error {
   }
 }
 
+/**
+ * Class of errors that occur during HTTP requests.  Can be thrown when a
+ * response is not a 2XX status.
+ */
 export class HttpError extends Error {
   constructor (response) {
     super(response.statusText)
     this.name = 'HttpError'
     this.status = response.status
     this.response = response
+  }
+}
+
+/**
+ * Class of errors that occur when parsing text as RDF.
+ */
+export class RdfParseError extends Error {
+  constructor (...args) {
+    super(...args)
+    this.name = 'RdfParseError'
   }
 }
 
@@ -149,7 +163,7 @@ export class NotImplementedError extends Error {
  * Describes the set of errors which should be "inlined" (included at node
  * level) in the response
  */
-const ERRORS_TO_BE_INLINED = new Set(['HttpError'])
+const ERRORS_TO_BE_INLINED = new Set(['HttpError', 'RdfParseError'])
 
 /**
  * Returns whether the given error should be included in the query response

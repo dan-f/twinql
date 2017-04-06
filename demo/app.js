@@ -21,7 +21,7 @@ function runQuery () {
   responseArea.classList.add('loading')
   twinql.query(backend, queryText)
     .then(result => {
-      responseArea.innerHTML = addLinks(JSON.stringify(result, null, 2))
+      responseArea.innerText = JSON.stringify(result, null, 2)
       responseArea.classList.remove('loading', 'error')
       responseArea.classList.add('success')
     })
@@ -32,6 +32,3 @@ function runQuery () {
       throw err
     })
 }
-
-const addLinks = str =>
-  str.replace(/"(https?:\/\/.+\..+)"/g, (_, group) => `"<a href="${group}">${group}</a>"`)
