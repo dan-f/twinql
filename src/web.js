@@ -1,8 +1,10 @@
 import 'isomorphic-fetch'
 
-import { HttpError } from './errors'
+import { HttpError, RdfParseError } from './errors'
 import Graph from './rdf/graph'
 import { parseQuads } from './rdf/quad'
+
+const TIMEOUT = 5000
 
 /**
  * Fetches a named graph over HTTP, parses the body, and returns the
@@ -15,15 +17,21 @@ import { parseQuads } from './rdf/quad'
 export async function fetchGraph (graphName) {
   let response
   try {
-    response = await fetch(graphName, { headers: { 'accept': 'text/turtle' } }) // eslint-disable-line
-      .then(throwIfBadStatus)
+    response = await Promise.race([
+      fetch(graphName, { headers: { 'accept': 'text/turtle' } }).then(throwIfBadStatus), // eslint-disable-line
+      new Promise((resolve, reject) => setTimeout(() => reject(new Error('Request timed out')), TIMEOUT))
+    ])
   } catch (e) {
     throw e.name === 'HttpError'
       ? e
       : new HttpError({ statusText: e.message, status: 0 })
   }
   const text = await response.text()
-  return Graph.fromQuads(await parseQuads(graphName, text))
+  try {
+    return Graph.fromQuads(await parseQuads(graphName, text))
+  } catch (e) {
+    throw new RdfParseError(e.message)
+  }
 }
 
 function throwIfBadStatus (response) {
