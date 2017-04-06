@@ -16,7 +16,9 @@
     "build": "npm run build:lib && npm run build:umd",
     "build:lib": "babel src -d lib",
     "build:dev": "webpack --config webpack.dev.config.js --watch",
-    "build:umd": "webpack --config webpack.prod.config.js"
+    "build:umd": "webpack --config webpack.prod.config.js",
+    "postversion": "git push --follow-tags",
+    "prepublish": "npm run build"
   },
   "author": "Daniel Friedman",
   "license": "MIT",
