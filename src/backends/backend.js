@@ -23,9 +23,9 @@ class Backend {
 
   /**
    * Get all nodes pointed to by the given subject and predicate.
-   * @param {module:node~Node} subject
-   * @param {module:node~Node} predicate
-   * @returns {Promise<module:node~NodeSet>}
+   * @param {module:rdf/node.Node} subject
+   * @param {module:rdf/node.Node} predicate
+   * @returns {Promise<module:rdf/node~NodeSet>}
    */
   async getObjects (subject, predicate) {
     throw new NotImplementedError('getObjects', this.className)
@@ -34,10 +34,10 @@ class Backend {
   /**
    * Get all subject nodes pointing to the given object by the given predicate
    * from the given named graph.
-   * @param {module:node~Node} predicate
-   * @param {module:node~Node} object
-   * @param {module:node~Node} namedGraph
-   * @returns {Promise<module:node~NodeSet>}
+   * @param {module:rdf/node.Node} predicate
+   * @param {module:rdf/node.Node} object
+   * @param {module:rdf/node.Node} namedGraph
+   * @returns {Promise<module:rdf/node~NodeSet>}
    */
   async getSubjects (predicate, object, namedGraph) {
     throw new NotImplementedError('getSubjects', this.className)

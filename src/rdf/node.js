@@ -24,12 +24,12 @@ import Immutable from 'immutable'
 
 /**
  * A union type for nodes in the graph
- * @typedef {(module:parsetree.Uri|module:parsetree.StringLiteral|module:node.NodeRecord)} NodeLike
+ * @typedef {(module:parsetree.Uri|module:parsetree.StringLiteral|module:rdf/node.NodeRecord)} NodeLike
  */
 
 /**
  * An immutable set of Nodes
- * @typedef NodeSet {external:Immutable.Set<module:node.NodeRecord>}
+ * @typedef NodeSet {external:Immutable.Set<module:rdf/node.NodeRecord>}
  */
 
 /**
@@ -45,9 +45,9 @@ export const Node = Immutable.Record({
 })
 
 /**
- * Constructs an {@link external:Immutable.Set} of {@link module:node.NodeRecord}s.
+ * Constructs an {@link external:Immutable.Set} of {@link module:rdf/node.NodeRecord}s.
  *
- * @param {Array<module:node.NodeLike>} [nodes=[]] - A list of RDF Nodes
+ * @param {Array<module:rdf/node.NodeLike>} [nodes=[]] - A list of RDF Nodes
  * @return {NodeSet} the set of nodes
  */
 export function nodeSet (nodes = []) {

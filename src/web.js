@@ -1,14 +1,14 @@
 import 'isomorphic-fetch'
 
 import { HttpError } from './errors'
-import Graph from './graph'
-import { parseQuads } from './quad'
+import Graph from './rdf/graph'
+import { parseQuads } from './rdf/quad'
 
 /**
  * Fetches a named graph over HTTP, parses the body, and returns the
  * corresponding graph
  * @param {String} graphName - the name (URI) of the graph to fetch
- * @returns {Promise<module:graph~Graph>} the fetched graph
+ * @returns {Promise<module:rdf/graph~Graph>} the fetched graph
  * @throws {module:errors~HttpError} An {@link module:errors~HttpError} may be
  * thrown if a non-2XX status code is returned
  */

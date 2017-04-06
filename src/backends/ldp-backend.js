@@ -1,4 +1,4 @@
-import Graph from '../graph'
+import Graph from '../rdf/graph'
 import InMemoryBackend from './in-memory-backend'
 import { fetchGraph } from '../web'
 
@@ -16,7 +16,7 @@ import { fetchGraph } from '../web'
 class LdpBackend extends InMemoryBackend {
   /**
    * Create an LdpBackend
-   * @param {module:graph~Graph} [graph = new {@link module:graph~Graph}]
+   * @param {module:rdf/graph~Graph} [graph = new {@link module:rdf/graph~Graph}]
    */
   constructor (graph = new Graph()) {
     super(graph)
@@ -57,7 +57,7 @@ class LdpBackend extends InMemoryBackend {
 
 /**
  * Gets the resource url for an RDF node.
- * @param {module:node.Node} node
+ * @param {module:rdf/node.Node} node
  * @returns {String} the url to the given resource
  */
 function getGraphName (node) {

@@ -1,6 +1,6 @@
 import Immutable from 'immutable'
 
-import { GraphError } from './errors'
+import { GraphError } from '../errors'
 import { nodeSet } from './node'
 
 /**
@@ -10,7 +10,7 @@ import { nodeSet } from './node'
 
 /**
  * Type for a graph index
- * @typedef Index {external:Immutable.Map<external:Immutable.List<module:node.Node>, external:Immutable.Set<module:node.Node>>}
+ * @typedef Index {external:Immutable.Map<external:Immutable.List<module:rdf/node.Node>, external:Immutable.Set<module:rdf/node.Node>>}
  */
 
 /**
@@ -20,9 +20,9 @@ class Graph {
   /**
    * Creates a Graph with (subject, predicate), (predicate, object), and
    * (predicate, object, graph) indices.
-   * @param {module:graph~Index} spIndex - the (subject, predicate) index
-   * @param {module:graph~Index} poIndex - the (predicate, object) index
-   * @param {module:graph~Index} pogIndex - the (predicate, object, graph) index
+   * @param {module:rdf/graph~Index} spIndex - the (subject, predicate) index
+   * @param {module:rdf/graph~Index} poIndex - the (predicate, object) index
+   * @param {module:rdf/graph~Index} pogIndex - the (predicate, object, graph) index
    */
   constructor (spIndex, poIndex, pogIndex) {
     this.spIndex = spIndex || new Immutable.Map()
@@ -33,8 +33,8 @@ class Graph {
   /**
    * Construct a graph from a sequence of quads
    * @static
-   * @param {Iterable<module:quad~Quad>} quads - the iterable sequence of quads
-   * @returns {module:graph~Graph} the resulting graph
+   * @param {Iterable<module:rdf/quad~Quad>} quads - the iterable sequence of quads
+   * @returns {module:rdf/graph~Graph} the resulting graph
    */
   static fromQuads (quads) {
     let spIndex = Immutable.Map()
@@ -59,11 +59,11 @@ class Graph {
    * - When given subject and predicate, gives all matching objects
    * - When given predicate and object, gives all matching subjects
    * - When given predicate, object, and graph, gives all matching subjects
-   * @param {module:node.Node} subject - the subject
-   * @param {module:node.Node} predicate - the predicate
-   * @param {module:node.Node} object - the object
-   * @param {module:node.Node} graph - the named graph
-   * @returns {module:node.NodeSet} the matched nodes
+   * @param {module:rdf/node.Node} subject - the subject
+   * @param {module:rdf/node.Node} predicate - the predicate
+   * @param {module:rdf/node.Node} object - the object
+   * @param {module:rdf/node.Node} graph - the named graph
+   * @returns {module:rdf/node.NodeSet} the matched nodes
    */
   match ({ subject, predicate, object, graph }) {
     if (subject && predicate) {
@@ -83,8 +83,8 @@ class Graph {
 
   /**
    * Returns a new graph containing all the quads of this graph and the other
-   * @param {module:graph~Graph} other - the other graph
-   * @returns {module:graph~Graph} the unioned graph
+   * @param {module:rdf/graph~Graph} other - the other graph
+   * @returns {module:rdf/graph~Graph} the unioned graph
    */
   union (other) {
     return new Graph(

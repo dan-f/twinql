@@ -1,5 +1,4 @@
 import Backend from './backend'
-import { nodeSet } from '../node'
 
 /**
  * Implements a backend for a single in-memory graph.
@@ -13,7 +12,7 @@ import { nodeSet } from '../node'
 class InMemoryBackend extends Backend {
   /**
    * Create an InMemoryBackend
-   * @param {module:graph~Graph} graph - the local graph
+   * @param {module:rdf/graph~Graph} graph - the local graph
    */
   constructor (graph) {
     super()
