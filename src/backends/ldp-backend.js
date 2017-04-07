@@ -19,10 +19,12 @@ class LdpBackend extends InMemoryBackend {
    * @param {module:rdf/graph~Graph} [graph = new {@link module:rdf/graph~Graph}]
    * @param {Object} options - options object
    * @param {String} [options.proxyUri=''] - the URI of a Solid agent used for fetching LDP resources
+   * @param {Object} [options.headers={}] - headers to send with each LDP request
    */
-  constructor ({ graph = new Graph(), proxyUri = '' }) {
+  constructor ({ graph = new Graph(), proxyUri = '', headers = {} }) {
     super(graph)
     this.proxyUri = proxyUri
+    this.headers = headers
     this.lockedGraphs = new Set()
     this.on('queryDone', () => this.lockedGraphs.clear())
   }
@@ -51,7 +53,7 @@ class LdpBackend extends InMemoryBackend {
     if (this.lockedGraphs.has(graphName)) {
       return true
     }
-    const graph = await fetchGraph(graphName, this.proxyUri)
+    const graph = await fetchGraph(graphName, this.proxyUri, this.headers)
     this.graph = this.graph.union(graph)
     this.lockedGraphs.add(graphName)
     return true
