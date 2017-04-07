@@ -1,29 +1,30 @@
 <html>
   <head>
-    <title>twinql demos</title>
+    <title>twinql pad</title>
     <script src="build/bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"></script>
-    <script defer src="demo/app.js"></script>
-    <link rel="stylesheet" type="text/css" href="demo/style.css">
+    <script defer src="public/app.js"></script>
+    <link rel="stylesheet" type="text/css" href="public/style.css">
+    <link rel="icon" href="public/favicon.ico">
     <meta name="viewport" content="width=device-width">
   </head>
   <body>
-    <h1><a href="./">twinql demos</a></h1>
+    <h1 class="center">
+      <a href="./">twinql pad</a>
+      <a href="https://github.com/dan-f/twinql"><img src="public/GitHub-Mark-120px-plus.png" alt="Github" width="32px"></a>
+    </h1>
     <nav>
       <ul>
-        <li><a href="demo/profile">Profile</a></li>
-        <li><a href="demo/social">Social Graph</a></li>
-        <li><a href="demo/data-discovery">Data Discovery</a></li>
-        <li><a href="demo/error-handling">Error Handling</a></li>
+        <li><a class="query-example" href="#profile">Profile</a></li>
+        <li><a class="query-example" href="#social">Social Graph</a></li>
+        <li><a class="query-example" href="#data-discovery">Data Discovery</a></li>
+        <li><a class="query-example" href="#error-handling">Error Handling</a></li>
       </ul>
     </nav>
     <div id='main'>
       <div class="code-container">
-        <h2>Query</h2>
+        <h2>Query</h2> <button id="execute-query">Send</button>
         <div id="editor" class='code-box'></div>
-        <div id="button-container">
-          <button id="execute-query">Query!</button>
-        </div>
       </div>
       <div class="code-container">
         <h2>Response</h2>
