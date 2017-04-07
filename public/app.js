@@ -4,6 +4,8 @@ edit.setFontSize(14)
 edit.setBehavioursEnabled(true)
 edit.setTheme('ace/theme/dawn')
 
+const SERVER_URL = 'https://databox.me/,query'
+
 const queryDictionary = {
   'profile':
 `@prefix foaf http://xmlns.com/foaf/0.1/
@@ -59,8 +61,6 @@ https://deiu.me/profile#me {
 `
 }
 
-const backend = new twinql.LdpBackend({ proxyUri: 'https://databox.me/,proxy?uri=' })
-
 const responseArea = document.getElementById('response-area')
 
 document.querySelectorAll('.query-example').forEach(exampleLink => {
@@ -83,16 +83,20 @@ function runQuery () {
   responseArea.innerText = ''
   responseArea.classList.remove('success', 'error')
   responseArea.classList.add('loading')
-  twinql.query(backend, queryText)
-    .then(result => {
-      responseArea.innerText = JSON.stringify(result, null, 2)
-      responseArea.classList.remove('loading', 'error')
-      responseArea.classList.add('success')
-    })
-    .catch(err => {
-      responseArea.innerText = err
-      responseArea.classList.remove('success', 'loading')
-      responseArea.classList.add('error')
-      throw err
-    })
+  fetch(SERVER_URL, {
+    method: 'POST',
+    headers: { 'content-type': 'text/plain' },
+    body: queryText
+  }).then(response =>
+    response.json()
+  ).then(json => {
+    responseArea.innerText = JSON.stringify(json, null, 2)
+    responseArea.classList.remove('loading', 'error')
+    responseArea.classList.add('success')
+  }).catch(err => {
+    responseArea.innerText = err
+    responseArea.classList.remove('success', 'loading')
+    responseArea.classList.add('error')
+    throw err
+  })
 }
