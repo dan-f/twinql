@@ -1,0 +1,88 @@
+:root {
+  --main-fg-color: #080808;
+  --main-bg-color: #f9f9f9;
+  --loading-color: #e4e4e4;
+  --success-color: #bbf5bb;
+  --failure-color: #ffe8e8;
+  --visited-color: #42255a;
+  --common-spacing: 5px;
+}
+
+body {
+  font-family: Verdana, Geneva, sans-serif;
+  background-color: var(--main-bg-color);
+  color: var(--main-fg-color);
+}
+
+a:link {
+  color: var(--main-fg-color);
+}
+
+a:visited {
+  color: var(--visited-color);
+}
+
+h2 {
+  display: inline-block;
+  padding: var(--common-spacing);
+}
+
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.center {
+  text-align: center;
+}
+
+ul > li {
+  display: inline;
+  padding: var(--common-spacing);
+}
+
+#main {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.code-box {
+  outline: 1px solid;
+  height: 350px;
+  margin: var(--common-spacing);
+  padding: var(--common-spacing);
+}
+
+@media all and (max-width: 999px) {
+  .code-container {
+    width: 100%;
+  }
+}
+
+@media all and (min-width: 1000px) {
+  .code-container {
+    width: 50%;
+  }
+}
+
+#execute-query {
+  margin-left: 10px;
+}
+
+#response-area {
+  overflow: scroll;
+}
+
+#response-area.loading {
+  background-color: var(--loading-color);
+}
+
+#response-area.success {
+  background-color: var(--success-color);
+}
+
+#response-area.error {
+  background-color: var(--failure-color);
+}
