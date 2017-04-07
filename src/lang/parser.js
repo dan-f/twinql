@@ -53,11 +53,14 @@ export default function parse (input) {
 }
 
 function query (t) {
-  return AST.queryNode({
+  const { EOF } = tokenTypes
+  const _queryNode = AST.queryNode({
     prefixList: prefixList(t),
     context: context(t),
     contextSensitiveQuery: contextSensitiveQuery(t)
   })
+  t.expect(EOF)
+  return _queryNode
 }
 
 function prefixList (t) {
