@@ -61,6 +61,18 @@ https://deiu.me/profile#me {
 `
 }
 
+const throughAgent = queryText =>
+  fetch(SERVER_URL, {
+    method: 'POST',
+    headers: { 'content-type': 'text/plain' },
+    body: queryText
+  }).then(response => response.json())
+
+const onTheClient = queryText => {
+  const backend = new twinql.LdpBackend({ proxyUri: 'https://databox.me/,proxy?uri=' })
+  return twinql.query(backend, queryText)
+}
+
 const responseArea = document.getElementById('response-area')
 
 document.querySelectorAll('.query-example').forEach(exampleLink => {
@@ -68,35 +80,36 @@ document.querySelectorAll('.query-example').forEach(exampleLink => {
     event.preventDefault()
     edit.setValue(queryDictionary[event.target.hash.substr(1)])
     edit.clearSelection()
-    runQuery()
+    responseArea.innerText = ''
+    responseArea.classList.remove('success', 'error')
   })
 })
 
-document.querySelector('#execute-query').addEventListener('click', (event) => {
+document.querySelector('#query-agent-uri').addEventListener('click', (event) => {
   event.preventDefault()
-  runQuery()
+  runQuery(throughAgent)
 })
 
-function runQuery () {
+document.querySelector('#query-client-side').addEventListener('click', (event) => {
+  event.preventDefault()
+  runQuery(onTheClient)
+})
+
+function runQuery (queryFn) {
   const queryText = edit.getValue()
-  if (!queryText.trim()) { return }
   responseArea.innerText = ''
   responseArea.classList.remove('success', 'error')
   responseArea.classList.add('loading')
-  fetch(SERVER_URL, {
-    method: 'POST',
-    headers: { 'content-type': 'text/plain' },
-    body: queryText
-  }).then(response =>
-    response.json()
-  ).then(json => {
-    responseArea.innerText = JSON.stringify(json, null, 2)
-    responseArea.classList.remove('loading', 'error')
-    responseArea.classList.add('success')
-  }).catch(err => {
-    responseArea.innerText = err
-    responseArea.classList.remove('success', 'loading')
-    responseArea.classList.add('error')
-    throw err
-  })
+  queryFn(queryText)
+    .then(json => {
+      responseArea.innerText = JSON.stringify(json, null, 2)
+      responseArea.classList.remove('loading', 'error')
+      responseArea.classList.add('success')
+    })
+    .catch(err => {
+      responseArea.innerText = err
+      responseArea.classList.remove('success', 'loading')
+      responseArea.classList.add('error')
+      throw err
+    })
 }

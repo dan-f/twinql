@@ -1,8 +1,9 @@
 <html>
   <head>
     <title>twinql pad</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"></script>
     <script defer src="public/app.js"></script>
+    <script src="build/bundle.js"></script>
     <link rel="stylesheet" type="text/css" href="public/style.css">
     <link rel="icon" href="public/favicon.ico">
     <meta name="viewport" content="width=device-width">
@@ -10,7 +11,7 @@
   <body>
     <h1 class="center">
       <a href="./">twinql pad</a>
-      <a href="https://github.com/dan-f/twinql"><img src="public/GitHub-Mark-120px-plus.png" alt="Github" width="32px"></a>
+      <a href="//github.com/dan-f/twinql"><img src="public/GitHub-Mark-120px-plus.png" alt="Github" width="32px"></a>
     </h1>
     <nav>
       <ul>
@@ -22,7 +23,9 @@
     </nav>
     <div id='main'>
       <div class="code-container">
-        <h2>Query</h2> <button id="execute-query">Send</button>
+        <h2>Query</h2>
+        <button id="query-agent-uri">Query from Agent</button>
+        <button id="query-client-side">Query from Browser</button>
         <div id="editor" class='code-box'></div>
       </div>
       <div class="code-container">
