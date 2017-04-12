@@ -11,7 +11,7 @@
     "start": "npm run demo",
     "test": "echo \"Error: no test specified\" && exit 1",
     "docs": "jsdoc src -r -c conf.json -d docs",
-    "demo": "http-server -o",
+    "demo": "http-server . -o",
     "build": "npm run build:lib && npm run build:umd",
     "build:lib": "babel src -d lib",
     "build:dev": "webpack --config webpack.dev.config.js --watch",

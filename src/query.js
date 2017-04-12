@@ -20,10 +20,10 @@ const all = Promise.all.bind(Promise)
 /**
  * Execute a query on a backend
  * @param {module:backends/backend~Backend} backend - the backend to query
- * @param {(String|module:lang/ast.AST)} q - the query
+ * @param {(String|module:lang/ast.AST)} [q = ''] - the query
  * @returns {Promise<module:query~Response>} the response graph
  */
-async function query (backend, q) {
+async function query (backend, q = '') {
   q = typeof q === 'string' ? parse(q) : q
   const resp = await new QueryEngine(backend).query(q)
   backend.trigger('queryDone')
