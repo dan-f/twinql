@@ -1,4 +1,4 @@
-import { isUri } from 'valid-url'
+import { isWebUri } from 'valid-url'
 
 import {
   IllegalCharacterError,
@@ -173,12 +173,12 @@ function id (val, line, col) {
   if (NAME_REGEX.test(val)) {
     return new Token(tokenTypes.NAME, val, line, col)
   }
+  if (isWebUri(val)) {
+    return new Token(tokenTypes.URI, val, line, col)
+  }
   if (PREFIXED_URI_REGEX.test(val)) {
     const [ _, prefix, path ]  = PREFIXED_URI_REGEX.exec(val)
     return new Token(tokenTypes.PREFIXED_URI, { prefix, path }, line, col)
-  }
-  if (isUri(val)) {
-    return new Token(tokenTypes.URI, val, line, col)
   }
   throw new UnrecognizedTokenError(`Unrecognized token: ${val}`, line, col)
 }

@@ -11,16 +11,16 @@ const queryDictionary = {
 `@prefix foaf http://xmlns.com/foaf/0.1/
 
 https://dan-f.databox.me/profile/card#me {
-  foaf.name
+  foaf:name
 }
 `,
   'social': `@prefix foaf http://xmlns.com/foaf/0.1/
 
 https://dan-f.databox.me/profile/card#me {
-  foaf.name
-  foaf.knows {
-    foaf.title
-    foaf.name
+  foaf:name
+  foaf:knows {
+    foaf:title
+    foaf:name
   }
 }
 `,
@@ -31,13 +31,13 @@ https://dan-f.databox.me/profile/card#me {
 @prefix solid http://www.w3.org/ns/solid/terms#
 
 https://dan-f.databox.me/profile/card#me {
-  solid.publicTypeIndex => ( rdf.type solid.TypeRegistration
-                             solid.forClass book.Bookmark ) {
-    solid.instance => ( rdf.type book.Bookmark ) {
-      dc.title
-      dc.description
-      book.recalls
-      book.hasTopic
+  solid:publicTypeIndex => ( rdf:type solid:TypeRegistration
+                             solid:forClass book:Bookmark ) {
+    solid:instance => ( rdf:type book:Bookmark ) {
+      dc:title
+      dc:description
+      book:recalls
+      book:hasTopic
     }
   }
 }
@@ -50,11 +50,11 @@ https://dan-f.databox.me/profile/card#me {
 @prefix solid http://www.w3.org/ns/solid/terms#
 
 https://deiu.me/profile#me {
-  solid.publicTypeIndex => ( rdf.type solid.TypeRegistration
-                             solid.forClass sioc.Post ) {
-    solid.instanceContainer => ( rdf.type ldp.Resource ) {
-      dc.title
-      sioc.content
+  solid:publicTypeIndex => ( rdf:type solid:TypeRegistration
+                             solid:forClass sioc:Post ) {
+    solid:instanceContainer => ( rdf:type ldp:Resource ) {
+      dc:title
+      sioc:content
     }
   }
 }
