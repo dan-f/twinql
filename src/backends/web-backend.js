@@ -3,23 +3,23 @@ import InMemoryBackend from './in-memory-backend'
 import { fetchGraph } from '../web'
 
 /**
- * Implements a backend which follows links in a [Linked Data Platform]{@link https://www.w3.org/TR/ldp/}
- * network.
+ * Implements a backend which follows links on the web.
  * @module
  */
 
 /**
- * A backend for the semantic web where each webserver is assumed to implement
- * the [Linked Data Platform spec]{@link https://www.w3.org/TR/ldp/}
+ * A backend for the semantic web where each web page is considered a named
+ * graph that can be dereferenced over HTTP.
  * @extends {module:backends/in-memory-backend~InMemoryBackend}
  */
-class LdpBackend extends InMemoryBackend {
+class WebBackend extends InMemoryBackend {
   /**
-   * Create an LdpBackend
+   * Create an WebBackend
    * @param {module:rdf/graph~Graph} [graph = new {@link module:rdf/graph~Graph}]
    * @param {Object} options - options object
-   * @param {String} [options.proxyUri=''] - the URI of a Solid agent used for fetching LDP resources
-   * @param {Object} [options.headers={}] - headers to send with each LDP request
+   * @param {String} [options.proxyUri=''] - the URI of a Solid agent used for
+   *     fetching RDF resources
+   * @param {Object} [options.headers={}] - headers to send with each request
    */
   constructor ({ graph = new Graph(), proxyUri = '', headers = {} }) {
     super(graph)
@@ -42,8 +42,8 @@ class LdpBackend extends InMemoryBackend {
   }
 
   /**
-   * Load the named graph for the given node's url (if not already loaded) into the
-   * backend's graph graph.
+   * Load the named graph for the given node's URL (if not already loaded)
+   * into the backend's graph graph.
    * @param {String} graphName
    */
   async ensureGraphLoaded (graphName) {
@@ -61,9 +61,9 @@ class LdpBackend extends InMemoryBackend {
 }
 
 /**
- * Gets the resource url for an RDF node.
+ * Gets the resource URL for an RDF node.
  * @param {module:rdf/node.Node} node
- * @returns {String} the url to the given resource
+ * @returns {String} the URL to the given resource
  */
 function getGraphName (node) {
   return node.termType === 'NamedNode'
@@ -71,4 +71,4 @@ function getGraphName (node) {
     : null
 }
 
-export default LdpBackend
+export default WebBackend
