@@ -220,23 +220,38 @@ function selectorList (t) {
 }
 
 function selector (t) {
-  const { ARROW, URI, PREFIXED_URI, LPAREN, LBRACE, RBRACE } = tokenTypes
-  const pred = id(t)
+  const { ARROW, URI, PREFIXED_URI, LPAREN, LBRACE, RBRACE, LSQUARE } = tokenTypes
+  const _edge = edge(t)
   return t.when({
-    [URI]: () => AST.leafSelectorNode({predicate: pred}),
-    [PREFIXED_URI]: () => AST.leafSelectorNode({predicate: pred}),
-    [RBRACE]: () => AST.leafSelectorNode({predicate: pred}),
+    [URI]: () => AST.leafSelectorNode({edge: _edge}),
+    [LSQUARE]: () => AST.leafSelectorNode({edge: _edge}),
+    [PREFIXED_URI]: () => AST.leafSelectorNode({edge: _edge}),
+    [RBRACE]: () => AST.leafSelectorNode({edge: _edge}),
     [LPAREN]: () => AST.intermediateSelectorNode({
-      predicate: pred,
+      edge: _edge,
       contextSensitiveQuery: contextSensitiveQuery(t)
     }),
     [LBRACE]: () => AST.intermediateSelectorNode({
-      predicate: pred,
+      edge: _edge,
       contextSensitiveQuery: contextSensitiveQuery(t)
     }),
     [ARROW]: () => AST.intermediateSelectorNode({
-      predicate: pred,
+      edge: _edge,
       contextSensitiveQuery: contextSensitiveQuery(t)
     })
+  })
+}
+
+function edge (t) {
+  const { LSQUARE, URI, PREFIXED_URI } = tokenTypes
+  return t.when({
+    [LSQUARE]: () => {
+      t.advance()
+      const _predicate = id(t)
+      t.advance()
+      return AST.multiEdgeNode({ predicate: _predicate })
+    },
+    [URI]: () => AST.singleEdgeNode({ predicate: id(t) }),
+    [PREFIXED_URI]: () => AST.singleEdgeNode({ predicate: id(t) }),
   })
 }

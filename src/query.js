@@ -227,11 +227,22 @@ class QueryEngine {
    * @returns {Promise<Object>} the response for the edge traversal
    */
   async traverseLeafSelector (node, selectorNode) {
-    const edge = this.toNode(selectorNode.predicate).get('value')
-    const objects = (await this.backend.getObjects(node, this.toNode(selectorNode.predicate)))
-      .toJS()
-      .map(formatNode)
-    return { [this.toPrefixed(edge)]: objects }
+    const { edge } = selectorNode
+    const predicateValue = this.toNode(edge.predicate).get('value')
+    let finalObjects
+    switch (edge.type) {
+      case 'singleEdge':
+        finalObjects = formatNode((await this.getNextObjectForSelector(node, edge)).toJS())
+        break
+      case 'multiEdge':
+        finalObjects = (await this.getNextObjectsForSelector(node, edge))
+          .toJS()
+          .map(formatNode)
+        break
+      default:
+        throw new QueryError(`Unrecognized edge type.  Expected 'singleEdge' or 'multiEdge' but got '${edge.type}'.`)
+    }
+    return { [this.toPrefixed(predicateValue)]: finalObjects }
   }
 
   /**
@@ -241,12 +252,53 @@ class QueryEngine {
    * @returns {Promise<Object>} the sub-response for the edge traversal
    */
   async traverseIntermediateSelector (node, selectorNode) {
-    const nodesMatchingEdge = await this.backend.getObjects(node, this.toNode(selectorNode.predicate))
-    const edge = this.toNode(selectorNode.predicate).get('value')
-    const subQueryResults = (await all(nodesMatchingEdge.map(async node => {
-      return this.contextSensitiveQuery(node, selectorNode.contextSensitiveQuery)
-    }))).filter(result => result != null)
-    return { [this.toPrefixed(edge)]: subQueryResults }
+    const { edge, contextSensitiveQuery } = selectorNode
+    let subQueryResults
+    switch (edge.type) {
+      case 'singleEdge':
+        const nextObject = await this.getNextObjectForSelector(node, edge)
+        subQueryResults = nextObject
+          ? await this.contextSensitiveQuery(nextObject, contextSensitiveQuery)
+          : null
+        break
+      case 'multiEdge':
+        const nextObjects = await this.getNextObjectsForSelector(node, edge)
+        subQueryResults = (await all(nextObjects.map(async node =>
+          this.contextSensitiveQuery(node, contextSensitiveQuery)
+        ))).filter(result => result != null)
+        break
+      default:
+        throw new QueryError(`Unrecognized edge type.  Expected 'singleEdge' or 'multiEdge' but got '${edge.type}'.`)
+    }
+    const predicateValue = this.toNode(edge.predicate).get('value')
+    return { [this.toPrefixed(predicateValue)]: subQueryResults }
+  }
+
+  /**
+   * Returns the set of objects to traverse given the current selector edge.
+   * @param {module:rdf/node.Node} node - the node to traverse
+   * @param {module:lang/ast.AST} edge - the edge AST node
+   * @returs {Promise<module:rdf/node~NodeSet>} the set of objects pointed to
+   *     by the current node and the edge
+   */
+  async getNextObjectsForSelector (node, edge) {
+    const { predicate } = edge
+    switch (edge.type) {
+      case 'multiEdge':
+        return this.backend.getObjects(node, this.toNode(predicate))
+      default:
+        throw new QueryError(`Edge type must be 'multiEdge' but got '${edge.type}'.`)
+    }
+  }
+
+  async getNextObjectForSelector (node, edge) {
+    const { predicate } = edge
+    switch (edge.type) {
+      case 'singleEdge':
+        return (await this.backend.getObjects(node, this.toNode(predicate))).first() || null
+      default:
+        throw new QueryError(`Edge type must be 'singleEdge' but got '${edge.type}'.`)
+    }
   }
 
   /**

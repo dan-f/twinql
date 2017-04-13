@@ -7,6 +7,8 @@ export const tokenTypes = {
   RPAREN: 'RPAREN',
   LBRACE: 'LBRACE',
   RBRACE: 'RBRACE',
+  LSQUARE: 'LSQUARE',
+  RSQUARE: 'RSQUARE',
   STRLIT: 'STRLIT',
   ON: 'ON',
   DEL: 'DEL',
@@ -29,7 +31,9 @@ export const symbols = {
   '(': tokenTypes.LPAREN,
   ')': tokenTypes.RPAREN,
   '{': tokenTypes.LBRACE,
-  '}': tokenTypes.RBRACE
+  '}': tokenTypes.RBRACE,
+  '[': tokenTypes.LSQUARE,
+  ']': tokenTypes.RSQUARE
 }
 
 export const NAME_REGEX = /^[a-zA-Z]+[a-zA-Z0-9_-]*$/

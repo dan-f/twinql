@@ -29,7 +29,7 @@ friends:
 https://dan-f.databox.me/profile/card#me {
   foaf:name
   foaf:img
-  foaf:knows {
+  [ foaf:knows ] {
     foaf:name
     foaf:img
   }
@@ -42,21 +42,13 @@ Response:
     "foaf": "http://xmlns.com/foaf/0.1/"
   },
   "@id": "https://dan-f.databox.me/profile/card#me",
-  "foaf:name": [
-    "Daniel Friedman"
-  ],
-  "foaf:img": [
-    "https://dan-f.databox.me/profile/me.jpg"
-  ],
+  "foaf:name": "Daniel Friedman",
+  "foaf:img": "https://dan-f.databox.me/profile/me.jpg",
   "foaf:knows": [
     {
       "@id": "https://deiu.me/profile#me",
-      "foaf:name": [
-        "Andrei Vlad Sambra"
-      ],
-      "foaf:img": [
-        "https://deiu.me/avatar.jpg"
-      ]
+      "foaf:name": "Andrei Vlad Sambra",
+      "foaf:img": "https://deiu.me/avatar.jpg"
     },
     {
       /* ... */
