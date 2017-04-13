@@ -36,7 +36,7 @@ export const NAME_REGEX = /^[a-zA-Z]+[a-zA-Z0-9_-]*$/
 
 // Captures two groups.  The first is the prefixed name and the second is the
 // path.
-export const PREFIXED_URI_REGEX = /^([a-zA-Z]+[a-zA-Z0-9_-]*)\.(.+)$/
+export const PREFIXED_URI_REGEX = /^([a-zA-Z]+[a-zA-Z0-9_-]*):(.+)$/
 
 export class Token {
   constructor(type, value, line, column) {
