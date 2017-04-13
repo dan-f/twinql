@@ -69,7 +69,7 @@ const throughAgent = queryText =>
   }).then(response => response.json())
 
 const onTheClient = queryText => {
-  const backend = new twinql.LdpBackend({ proxyUri: 'https://databox.me/,proxy?uri=' })
+  const backend = new twinql.WebBackend({ proxyUri: 'https://databox.me/,proxy?uri=' })
   return twinql.query(backend, queryText)
 }
 

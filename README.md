@@ -27,11 +27,11 @@ friends:
 @prefix foaf http://xmlns.com/foaf/0.1/
 
 https://dan-f.databox.me/profile/card#me {
-  foaf.name
-  foaf.img
-  foaf.knows {
-    foaf.name
-    foaf.img
+  foaf:name
+  foaf:img
+  foaf:knows {
+    foaf:name
+    foaf:img
   }
 }
 ```
@@ -71,7 +71,7 @@ Response:
 - Be declarative
 - Work well with existing standards and tools
 - Make app-building easier
-- Support multiple persistence layers (in-memory, LDP, SPARQL, etc)
+- Support multiple persistence layers (in-memory, link following, SPARQL, etc)
 - Be implemented eventually on the server to improve performance when querying
   within a single domain and to reduce data being sent over the network
 
