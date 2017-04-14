@@ -18,7 +18,7 @@ https://dan-f.databox.me/profile/card#me {
 
 https://dan-f.databox.me/profile/card#me {
   foaf:name
-  foaf:knows {
+  [ foaf:knows ] {
     foaf:title
     foaf:name
   }
@@ -37,7 +37,7 @@ https://dan-f.databox.me/profile/card#me {
       dc:title
       dc:description
       book:recalls
-      book:hasTopic
+      [ book:hasTopic ]
     }
   }
 }

@@ -62,15 +62,25 @@ export const traversalNode = ({ selectorList }) => new AST({
   selectorList
 })
 
-export const leafSelectorNode = ({ predicate }) => new AST({
+export const leafSelectorNode = ({ edge }) => new AST({
   type: 'leafSelector',
+  edge
+})
+
+export const intermediateSelectorNode = ({ edge, contextSensitiveQuery }) => new AST({
+  type: 'intermediateSelector',
+  edge,
+  contextSensitiveQuery
+})
+
+export const singleEdgeNode = ({ predicate }) => new AST({
+  type: 'singleEdge',
   predicate
 })
 
-export const intermediateSelectorNode = ({ predicate, contextSensitiveQuery }) => new AST({
-  type: 'intermediateSelector',
-  predicate,
-  contextSensitiveQuery
+export const multiEdgeNode = ({ predicate }) => new AST({
+  type: 'multiEdge',
+  predicate
 })
 
 export const uriNode = ({ value }) => new AST({
