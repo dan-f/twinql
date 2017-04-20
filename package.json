@@ -13,7 +13,7 @@
     "mocha": "mocha --require babel-register 'src/**/*.js'",
     "pretest": "npm run lint",
     "test": "nyc --reporter=html --reporter=text npm run mocha",
-    "test:dev": "npm run mocha -- --watch",
+    "test:dev": "npm run mocha -- --watch --growl",
     "docs": "jsdoc src -r -c conf.json -d docs",
     "demo": "http-server . -o",
     "build": "npm run build:lib && npm run build:umd",
@@ -48,5 +48,10 @@
     "isomorphic-fetch": "^2.2.1",
     "n3": "^0.9.1",
     "valid-url": "^1.0.9"
+  },
+  "standard": {
+    "ignore": [
+      "src/**/*.spec.js"
+    ]
   }
 }
