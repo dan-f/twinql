@@ -32,7 +32,7 @@ describe('web', () => {
         .reply((uri, requestBody, cb) => setTimeout(() => cb(
           null,
           [200, '', { 'Content-Type': 'text/turtle' }]
-        ), 1))
+        ), 10))
 
       return expect(fetchGraph(`${DOMAIN}/graph`, { timeout: 0 }))
         .to.be.rejectedWith('Request timed out')
