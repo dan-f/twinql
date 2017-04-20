@@ -1,4 +1,4 @@
-import { AbstractClassError, NotImplementedError } from '../errors'
+import { NotImplementedError } from '../errors'
 
 /**
  * A backend is an interface for the query engine to speak to a quadstore.  It

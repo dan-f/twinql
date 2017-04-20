@@ -27,7 +27,7 @@ class InMemoryBackend extends Backend {
     return this.graph.match({
       predicate,
       object,
-      graph: namedGraph ? namedGraph : null
+      graph: namedGraph || null
     })
   }
 }

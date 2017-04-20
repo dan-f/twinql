@@ -35,7 +35,7 @@ const chars = {
 /**
  * Returns an iterable over the token stream of its input.
  */
-function* lex (input) {
+function * lex (input) {
   let line = 1                  // the line we're on
   let col = -1                  // the column we're on
   let curVal                    // the value of the token we're reading
@@ -142,9 +142,8 @@ function* lex (input) {
       break
     case states.STRING:
       throw new UnterminatedTokenError(`Unterminated string literal '${curVal}'`, line, col)
-      break
     case states.ID:
-      yield new id(curVal, line, col)
+      yield id(curVal, line, col)
       break
   }
   yield new Token(tokenTypes.EOF, null, line, col)
@@ -177,7 +176,7 @@ function id (val, line, col) {
     return new Token(tokenTypes.URI, val, line, col)
   }
   if (PREFIXED_URI_REGEX.test(val)) {
-    const [ _, prefix, path ]  = PREFIXED_URI_REGEX.exec(val)
+    const [ _, prefix, path ] = PREFIXED_URI_REGEX.exec(val) // eslint-disable-line
     return new Token(tokenTypes.PREFIXED_URI, { prefix, path }, line, col)
   }
   throw new UnrecognizedTokenError(`Unrecognized token: ${val}`, line, col)

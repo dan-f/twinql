@@ -7,7 +7,7 @@
  * The class for abstract syntax tree nodes
  */
 export class AST {
-  constructor ({ type, ...attrs}) {
+  constructor ({ type, ...attrs }) {
     if (!type) {
       throw new Error('Must provide a `type` when constructing a AST')
     }

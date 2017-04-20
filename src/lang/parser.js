@@ -74,7 +74,7 @@ function prefixList (t) {
 }
 
 function prefix (t) {
-  const { NAME, PREFIX } = tokenTypes
+  const { PREFIX } = tokenTypes
   t.expect(PREFIX)
   t.advance()
   return AST.prefixNode({
@@ -188,14 +188,14 @@ function prefixedUri (t) {
 function name (t) {
   const { NAME } = tokenTypes
   t.expect(NAME)
-  const _name = AST.nameNode({ value: t.current.value})
+  const _name = AST.nameNode({ value: t.current.value })
   t.advance()
   return _name
 }
 
 function string (t) {
   const { STRLIT } = tokenTypes
-  const _string = t.when({[STRLIT]: () => AST.stringLiteralNode({value: t.current.value})})
+  const _string = t.when({[STRLIT]: () => AST.stringLiteralNode({ value: t.current.value })})
   t.advance()
   return _string
 }
@@ -252,6 +252,6 @@ function edge (t) {
       return AST.multiEdgeNode({ predicate: _predicate })
     },
     [URI]: () => AST.singleEdgeNode({ predicate: id(t) }),
-    [PREFIXED_URI]: () => AST.singleEdgeNode({ predicate: id(t) }),
+    [PREFIXED_URI]: () => AST.singleEdgeNode({ predicate: id(t) })
   })
 }

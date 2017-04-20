@@ -43,7 +43,7 @@ export const NAME_REGEX = /^[a-zA-Z]+[a-zA-Z0-9_-]*$/
 export const PREFIXED_URI_REGEX = /^([a-zA-Z]+[a-zA-Z0-9_-]*):(.+)$/
 
 export class Token {
-  constructor(type, value, line, column) {
+  constructor (type, value, line, column) {
     this.type = type
     this.value = value
     this.line = line

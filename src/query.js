@@ -85,7 +85,7 @@ class QueryEngine {
       return {}
     }
     const { type, contextType } = nodeSpec
-    if (type === 'emptyNodeSpecifier' || type === 'matchingNodeSpecifier' && contextType === 'subject') {
+    if (type === 'emptyNodeSpecifier' || (type === 'matchingNodeSpecifier' && contextType === 'subject')) {
       return results[0]
     } else if (type === 'matchingNodeSpecifier' && contextType === 'graph') {
       return {
@@ -163,7 +163,7 @@ class QueryEngine {
         try {
           return context.map(async namedGraph => {
             return (await all(
-              (await this.specifiedNodes(null, match.type === 'intermediateMatch'? match.nodeSpecifier : match.value))
+              (await this.specifiedNodes(null, match.type === 'intermediateMatch' ? match.nodeSpecifier : match.value))
                 .map(node => this.backend.getSubjects(this.toNode(match.predicate), node, namedGraph))
             )).reduce((allNodes, currentNodes) => allNodes.union(currentNodes))
           }).reduce((allNodes, currentNodes) => allNodes.union(currentNodes))
@@ -208,16 +208,16 @@ class QueryEngine {
     }
     return error
       ? {
-          '@id': node.get('value'),
-          '@error': formatErrorForResponse(error)
-        }
+        '@id': node.get('value'),
+        '@error': formatErrorForResponse(error)
+      }
       : {
-          '@id': node.get('value'),
-          ...results.reduce((response, result) => ({
-            ...response,
-            ...result
-          }), {})
-        }
+        '@id': node.get('value'),
+        ...results.reduce((response, result) => ({
+          ...response,
+          ...result
+        }), {})
+      }
   }
 
   /**
