@@ -24,7 +24,7 @@ export const queryNode = ({ prefixList, context, contextSensitiveQuery }) => new
 })
 
 export const prefixNode = ({ name, uri }) => new AST({
-  type: 'prefixNode',
+  type: 'prefix',
   name,
   uri
 })
@@ -58,7 +58,7 @@ export const intermediateMatchNode = ({ predicate, nodeSpecifier }) => new AST({
 })
 
 export const traversalNode = ({ selectorList }) => new AST({
-  type: 'traversalNode',
+  type: 'traversal',
   selectorList
 })
 
