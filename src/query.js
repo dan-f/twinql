@@ -232,11 +232,10 @@ class QueryEngine {
     let finalObjects
     switch (edge.type) {
       case 'singleEdge':
-        finalObjects = formatNode((await this.getNextObjectForSelector(node, edge)).toJS())
+        finalObjects = formatNode((await this.getNextObjectForSelector(node, edge)))
         break
       case 'multiEdge':
         finalObjects = (await this.getNextObjectsForSelector(node, edge))
-          .toJS()
           .map(formatNode)
         break
       default:
@@ -345,6 +344,9 @@ class QueryEngine {
  * @param {module:rdf/node.Node} node
  */
 function formatNode (node) {
+  if (node == null) {
+    return node
+  }
   const { datatype, language, value } = node
   if (!datatype && !language) {
     return value
