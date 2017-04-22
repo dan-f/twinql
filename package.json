@@ -10,7 +10,7 @@
   "scripts": {
     "start": "npm run demo",
     "lint": "standard --verbose 'src/**/*.js'",
-    "mocha": "mocha --require babel-register 'src/**/*.js'",
+    "mocha": "mocha --require babel-register test/setup.js 'src/**/*.js'",
     "pretest": "npm run lint",
     "test": "nyc --reporter=html --reporter=text npm run mocha",
     "test:dev": "npm run mocha -- --watch --growl",

@@ -1,30 +1,6 @@
 /* eslint-env mocha */
-
-import chai, { expect } from 'chai'
-
 import { AST } from './ast'
 import parse, * as P from './parser'
-
-chai.use((_chai, utils) => {
-  const { Assertion } = _chai
-
-  Assertion.addMethod('ast', function (type) {
-    const obj = this._obj
-    new Assertion(obj).to.be.instanceof(AST)
-    new Assertion(obj.type).to.equal(type)
-  })
-
-  Assertion.addMethod('withValue', function (value) {
-    const obj = this._obj
-    new Assertion(obj.value).to.equal(value)
-  })
-
-  Assertion.addMethod('listOf', function (type) {
-    const obj = this._obj
-    new Assertion(obj).to.be.instanceof(Array)
-    obj.map(child => new Assertion(child).to.be.ast(type))
-  })
-})
 
 describe('parser', () => {
   const errorRegexp = (expected, actualValue, actualType) => {

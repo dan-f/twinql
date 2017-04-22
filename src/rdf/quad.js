@@ -23,7 +23,7 @@ import { iterObj } from '../util'
  * in N3.
  * @param {String} graphName - the name of the graph (the URI of the graph)
  * @param {String} text - the text of the graph in N3
- * @returns {Iterable<module:rdf/quad~Quad>} an iterable of parsed quads
+ * @returns {Promise<Iterable<module:rdf/quad~Quad>>} an iterable of parsed quads
  */
 export function parseQuads (graphName, text) {
   return new Promise((resolve, reject) => {

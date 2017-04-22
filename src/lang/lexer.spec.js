@@ -1,7 +1,4 @@
 /* eslint-env mocha */
-
-import { expect } from 'chai'
-
 import { IllegalCharacterError } from '../errors'
 import lex from './lexer'
 

@@ -1,13 +1,9 @@
 /* eslint-env mocha */
-import chai, { expect } from 'chai'
-import chaiAsPromised from 'chai-as-promised'
 import nock from 'nock'
 
 import { HttpError } from './errors'
 import { fetchGraph } from './web'
 import Graph from './rdf/graph'
-
-chai.use(chaiAsPromised)
 
 describe('web', () => {
   describe('fetchGraph', () => {

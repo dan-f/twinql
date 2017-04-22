@@ -1,6 +1,4 @@
 /* eslint-env mocha */
-import { expect } from 'chai'
-
 import { iterObj } from './util'
 
 describe('util', () => {

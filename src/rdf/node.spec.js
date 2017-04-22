@@ -1,6 +1,4 @@
 /* eslint-env mocha */
-import { expect } from 'chai'
-
 import Immutable from 'immutable'
 
 import { Node, nodeSet } from './node'
