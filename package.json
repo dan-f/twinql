@@ -12,7 +12,7 @@
     "lint": "standard --verbose 'src/**/*.js'",
     "mocha": "mocha --require babel-register test/setup.js 'src/**/*.js'",
     "pretest": "npm run lint",
-    "test": "nyc --reporter=html --reporter=text npm run mocha",
+    "test": "cross-env NODE_ENV=test nyc npm run mocha",
     "test:dev": "npm run mocha -- --watch --growl",
     "docs": "jsdoc src -r -c conf.json -d docs",
     "demo": "http-server . -o",
@@ -36,6 +36,7 @@
     "chai-as-promised": "^6.0.0",
     "chai-immutable": "^1.6.0",
     "coveralls": "^2.13.0",
+    "cross-env": "^4.0.0",
     "http-server": "^0.9.0",
     "jsdoc": "^3.4.3",
     "jsdoc-strip-async-await": "^0.1.0",
@@ -53,6 +54,18 @@
     "isomorphic-fetch": "^2.2.1",
     "n3": "^0.9.1",
     "valid-url": "^1.0.9"
+  },
+  "nyc": {
+    "reporter": [
+      "html",
+      "text"
+    ],
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "src/**/*.spec.js"
+    ]
   },
   "standard": {
     "ignore": [
