@@ -129,22 +129,6 @@ export class GraphError extends Error {
 }
 
 /**
- * Class of errors for when a class that is meant to be 'abstract' (i.e. not
- * directly instantiated) is directly instatiated
- */
-export class AbstractClassError extends Error {
-  /**
-   * Create an AbstractClassError
-   * @param {String} className
-   * @param {String} message
-   */
-  constructor (className, message) {
-    super(`<${className}> class is abstract and cannot be directly instantiated.  ${message}`)
-    this.name = 'AbstractClassError'
-  }
-}
-
-/**
  * Class of errors for when an abstract method is called
  */
 export class NotImplementedError extends Error {
