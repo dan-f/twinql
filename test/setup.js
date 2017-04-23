@@ -14,6 +14,22 @@ chai.use(chaiImmutable)
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
+// Set helper
+chai.use((_chai, utils) => {
+  const { Assertion } = _chai
+
+  Assertion.addMethod('haveMember', function (member) {
+    const obj = this._obj
+    this.assert(
+      obj.has(member),
+      'expected #{this} set to have member #{exp}',
+      'expected #{this} set not to have member #{exp}',
+      member,
+      obj
+    )
+  })
+})
+
 // RDF helpers
 chai.use((_chai, utils) => {
   const { Assertion } = _chai
