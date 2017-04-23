@@ -1,11 +1,15 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
+import chaiImmutable from 'chai-immutable'
+import Immutable from 'immutable'
 
 import { AST } from '../src/lang/ast'
-import { Node } from '../src/rdf/node'
+import { Node, nodeSet } from '../src/rdf/node'
 
 global.expect = chai.expect
 
+// Plugins
+chai.use(chaiImmutable)
 chai.use(chaiAsPromised)
 
 // RDF helpers
@@ -85,5 +89,25 @@ chai.use((_chai, utils) => {
     const obj = this._obj
     new Assertion(obj).to.be.instanceof(Array)
     obj.map(child => new Assertion(child).to.be.ast(type))
+  })
+})
+
+// Graph helpers
+chai.use((_chai, utils) => {
+  const { Assertion } = _chai
+
+  Assertion.addMethod('index', function (index) {
+    utils.flag(this, 'index', index)
+  })
+
+  Assertion.addMethod('map', function (...list) {
+    utils.flag(this, 'indexKey', Immutable.List(list))
+  })
+
+  Assertion.addMethod('nodes', function (nodes) {
+    const obj = this._obj
+    const index = obj[utils.flag(this, 'index')]
+    const actualValue = index.get(utils.flag(this, 'indexKey'))
+    new Assertion(actualValue).to.equal(nodeSet(nodes))
   })
 })
