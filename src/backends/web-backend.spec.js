@@ -34,8 +34,9 @@ describe('web-backend', () => {
         const alice = Node({ termType: 'NamedNode', value: 'https://alice.com/graph#alice' })
         const knows = Node({ termType: 'NamedNode', value: 'http://xmlns.com/foaf/0.1/knows' })
         const bob = Node({ termType: 'NamedNode', value: 'https://bob.com/graph#bob' })
+        const spot = Node({ termType: 'NamedNode', value: 'https://alice.com/graph#spot' })
         return expect(backend.getObjects(alice, knows))
-          .to.eventually.equal(nodeSet([bob]))
+          .to.eventually.equal(nodeSet([bob, spot]))
       })
     })
 
@@ -79,8 +80,9 @@ describe('web-backend', () => {
             const alice = Node({ termType: 'NamedNode', value: `${graphName}#alice` })
             const knows = Node({ termType: 'NamedNode', value: 'http://xmlns.com/foaf/0.1/knows' })
             const bob = Node({ termType: 'NamedNode', value: 'https://bob.com/graph#bob' })
+            const spot = Node({ termType: 'NamedNode', value: 'https://alice.com/graph#spot' })
             expect(backend.graph.match({ subject: alice, predicate: knows}))
-              .to.equal(nodeSet([bob]))
+              .to.equal(nodeSet([bob, spot]))
             expect(fetchGraphSpy).to.have.been.calledOnce
           })
       })

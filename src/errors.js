@@ -25,17 +25,6 @@ export class IllegalCharacterError extends LexError {
 }
 
 /**
- * Class of errors for when the lexer unexpectedly reaches the end of the buffer
- * @extends {module:errors~LexError}
- */
-export class EndOfInputError extends LexError {
-  constructor (...args) {
-    super(...args)
-    this.name = 'EndOfInputError'
-  }
-}
-
-/**
  * Class of errors for when the lexer encounters an uncompleted token
  * @extends {module:errors~LexError}
  */

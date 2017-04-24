@@ -50,9 +50,12 @@ class QueryEngine {
    */
   async query (ast) {
     this.prefixMap = this.getPrefixMap(ast.prefixList)
+    const contextBlock = Object.keys(this.prefixMap).length
+      ? { '@context': this.prefixMap }
+      : {}
     const queryResults = await this.contextSensitiveQuery(this.toNode(ast.context), ast.contextSensitiveQuery)
     return {
-      '@context': this.prefixMap,
+      ...contextBlock,
       ...queryResults
     }
   }
@@ -106,6 +109,7 @@ class QueryEngine {
     switch (nodeSpec.type) {
       case 'uri':
       case 'prefixedUri':
+      case 'stringLiteral':
         return nodeSet([this.toNode(nodeSpec)])
       case 'emptyNodeSpecifier':
         return context
@@ -232,10 +236,11 @@ class QueryEngine {
     let finalObjects
     switch (edge.type) {
       case 'singleEdge':
-        finalObjects = formatNode((await this.getNextObjectForSelector(node, edge)))
+        finalObjects = formatNode(await this.getNextObjectForSelector(node, edge))
         break
       case 'multiEdge':
         finalObjects = (await this.getNextObjectsForSelector(node, edge))
+          .toJS()
           .map(formatNode)
         break
       default:
@@ -301,19 +306,20 @@ class QueryEngine {
   }
 
   /**
-   * Converts an ID AST node to a {@link module:rdf/node.Node}
+   * Converts an AST node to a {@link module:rdf/node.Node}
    * @param {module:lang/ast.AST} ast - the AST node
    * @returns {@link module:rdf/node.Node} the converted node
    */
   toNode (ast) {
-    const data = { termType: 'NamedNode' }
     switch (ast.type) {
+      case 'stringLiteral':
+        return Node({ termType: 'Literal', value: ast.value })
       case 'uri':
-        return Node({ ...data, value: ast.value })
+        return Node({ termType: 'NamedNode', value: ast.value })
       case 'prefixedUri':
         const prefixUri = this.prefixMap[ast.prefix]
         if (prefixUri) {
-          return Node({ ...data, value: this.prefixMap[ast.prefix] + ast.path })
+          return Node({ termType: 'NamedNode', value: this.prefixMap[ast.prefix] + ast.path })
         } else {
           throw new QueryError(`Missing prefix definition for "${ast.prefix}"`)
         }
@@ -353,10 +359,10 @@ function formatNode (node) {
   }
   const formatted = { '@value': value }
   if (datatype) {
-    formatted['@type'] = datatype.value
+    formatted['@type'] = datatype
   }
   if (language) {
-    formatted['@language'] = language.value
+    formatted['@language'] = language
   }
   return formatted
 }
