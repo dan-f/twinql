@@ -1,4 +1,5 @@
 import query from './query'
+import Backend from './backends/backend'
 import InMemoryBackend from './backends/in-memory-backend'
 import WebBackend from './backends/web-backend'
 
@@ -7,4 +8,4 @@ import WebBackend from './backends/web-backend'
  * @module
  */
 
-export { query, InMemoryBackend, WebBackend }
+export { query, Backend, InMemoryBackend, WebBackend }

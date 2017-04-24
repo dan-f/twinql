@@ -5,6 +5,8 @@ import { tokenTypes } from './tokens'
 
 // Helper for navigating the token stream
 
+const ANY = '*'
+
 class TokenStream {
   constructor (iterator) {
     this.iterator = iterator
@@ -27,18 +29,23 @@ class TokenStream {
   }
 
   expect (...tokenTypes) {
-    if (!(new Set(tokenTypes).has(this.current.type))) {
-      throw new UnexpectedTokenError(
-        tokenTypes, this.current
-      )
+    const tokenTypeSet = new Set(tokenTypes)
+    if (tokenTypeSet.has(ANY) || (tokenTypeSet.has(this.current.type))) {
+      return true
     }
-    return true
+    throw new UnexpectedTokenError(
+      tokenTypes, this.current
+    )
   }
 
   when (tokenTypesToHandlers) {
     const tokenTypes = Object.keys(tokenTypesToHandlers)
+    const tokenTypeSet = new Set(tokenTypes)
     this.expect(...tokenTypes)
-    return tokenTypesToHandlers[this.current.type]()
+    if (tokenTypeSet.has(this.current.type)) {
+      return tokenTypesToHandlers[this.current.type]()
+    }
+    return tokenTypesToHandlers[ANY]()
   }
 
   _pull () {
@@ -48,11 +55,11 @@ class TokenStream {
 
 // Parse functions
 
-export default function parse (input) {
-  return query(new TokenStream(lex(input)))
+export default function parse (input, parseFn = query) {
+  return parseFn(new TokenStream(lex(input)))
 }
 
-function query (t) {
+export function query (t) {
   const { EOF } = tokenTypes
   const _queryNode = AST.queryNode({
     prefixList: prefixList(t),
@@ -63,18 +70,18 @@ function query (t) {
   return _queryNode
 }
 
-function prefixList (t) {
+export function prefixList (t) {
   const { PREFIX, URI, PREFIXED_URI } = tokenTypes
   t.expect(PREFIX, URI, PREFIXED_URI)
   const prefixes = []
-  while (t.current.type !== URI && t.current.type !== PREFIXED_URI) {
+  while (t.current.type === PREFIX) {
     prefixes.push(prefix(t))
   }
   return prefixes
 }
 
-function prefix (t) {
-  const { NAME, PREFIX } = tokenTypes
+export function prefix (t) {
+  const { PREFIX } = tokenTypes
   t.expect(PREFIX)
   t.advance()
   return AST.prefixNode({
@@ -83,17 +90,17 @@ function prefix (t) {
   })
 }
 
-const context = id
+export const context = id
 
-function contextSensitiveQuery (t) {
+export function contextSensitiveQuery (t) {
   return AST.contextSensitiveQueryNode({
     nodeSpecifier: nodeSpecifier(t),
     traversal: traversal(t)
   })
 }
 
-function nodeSpecifier (t) {
-  const { ARROW, LPAREN, LBRACE, RPAREN } = tokenTypes
+export function nodeSpecifier (t) {
+  const { ARROW, LPAREN, RPAREN } = tokenTypes
   return t.when({
     [ARROW]: () => {
       t.advance()
@@ -117,21 +124,21 @@ function nodeSpecifier (t) {
       t.advance()
       return nodeSpec
     },
-    [LBRACE]: () => AST.emptyNodeSpecifierNode()
+    [ANY]: () => AST.emptyNodeSpecifierNode()
   })
 }
 
-function matchList (t) {
-  const { URI, PREFIXED_URI, RPAREN } = tokenTypes
-  t.expect(URI, PREFIXED_URI, RPAREN)
+export function matchList (t) {
+  const { URI, PREFIXED_URI } = tokenTypes
+  const beginningMatchTokens = new Set([URI, PREFIXED_URI])
   const matches = []
-  while (t.current.type !== RPAREN) {
+  while (beginningMatchTokens.has(t.current.type)) {
     matches.push(match(t))
   }
   return matches
 }
 
-function match (t) {
+export function match (t) {
   const { URI, PREFIXED_URI, STRLIT, LPAREN } = tokenTypes
   const pred = predicate(t)
   return t.when({
@@ -156,7 +163,7 @@ function match (t) {
 
 const predicate = id
 
-function id (t) {
+export function id (t) {
   const { URI, PREFIXED_URI } = tokenTypes
   return t.when({
     [URI]: () => uri(t),
@@ -164,7 +171,7 @@ function id (t) {
   })
 }
 
-function uri (t) {
+export function uri (t) {
   const { URI } = tokenTypes
   const _uri = t.when({
     [URI]: () => AST.uriNode({ value: t.current.value })
@@ -173,7 +180,7 @@ function uri (t) {
   return _uri
 }
 
-function prefixedUri (t) {
+export function prefixedUri (t) {
   const { PREFIXED_URI } = tokenTypes
   const _uri = t.when({
     [PREFIXED_URI]: () => {
@@ -185,22 +192,22 @@ function prefixedUri (t) {
   return _uri
 }
 
-function name (t) {
+export function name (t) {
   const { NAME } = tokenTypes
   t.expect(NAME)
-  const _name = AST.nameNode({ value: t.current.value})
+  const _name = AST.nameNode({ value: t.current.value })
   t.advance()
   return _name
 }
 
-function string (t) {
+export function string (t) {
   const { STRLIT } = tokenTypes
-  const _string = t.when({[STRLIT]: () => AST.stringLiteralNode({value: t.current.value})})
+  const _string = t.when({[STRLIT]: () => AST.stringLiteralNode({ value: t.current.value })})
   t.advance()
   return _string
 }
 
-function traversal (t) {
+export function traversal (t) {
   const { LBRACE, RBRACE } = tokenTypes
   t.expect(LBRACE)
   t.advance()
@@ -210,23 +217,20 @@ function traversal (t) {
   return AST.traversalNode({selectorList: selectors})
 }
 
-function selectorList (t) {
-  const { RBRACE } = tokenTypes
+export function selectorList (t) {
+  const { LSQUARE, URI, PREFIXED_URI } = tokenTypes
+  const edgeTypes = new Set([LSQUARE, URI, PREFIXED_URI])
   const selectors = []
-  while (t.current.type !== RBRACE) {
+  while (edgeTypes.has(t.current.type)) {
     selectors.push(selector(t))
   }
   return selectors
 }
 
-function selector (t) {
-  const { ARROW, URI, PREFIXED_URI, LPAREN, LBRACE, RBRACE, LSQUARE } = tokenTypes
+export function selector (t) {
+  const { ARROW, LPAREN, LBRACE } = tokenTypes
   const _edge = edge(t)
   return t.when({
-    [URI]: () => AST.leafSelectorNode({edge: _edge}),
-    [LSQUARE]: () => AST.leafSelectorNode({edge: _edge}),
-    [PREFIXED_URI]: () => AST.leafSelectorNode({edge: _edge}),
-    [RBRACE]: () => AST.leafSelectorNode({edge: _edge}),
     [LPAREN]: () => AST.intermediateSelectorNode({
       edge: _edge,
       contextSensitiveQuery: contextSensitiveQuery(t)
@@ -238,11 +242,12 @@ function selector (t) {
     [ARROW]: () => AST.intermediateSelectorNode({
       edge: _edge,
       contextSensitiveQuery: contextSensitiveQuery(t)
-    })
+    }),
+    [ANY]: () => AST.leafSelectorNode({edge: _edge})
   })
 }
 
-function edge (t) {
+export function edge (t) {
   const { LSQUARE, URI, PREFIXED_URI } = tokenTypes
   return t.when({
     [LSQUARE]: () => {
@@ -252,6 +257,6 @@ function edge (t) {
       return AST.multiEdgeNode({ predicate: _predicate })
     },
     [URI]: () => AST.singleEdgeNode({ predicate: id(t) }),
-    [PREFIXED_URI]: () => AST.singleEdgeNode({ predicate: id(t) }),
+    [PREFIXED_URI]: () => AST.singleEdgeNode({ predicate: id(t) })
   })
 }

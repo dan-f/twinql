@@ -25,17 +25,6 @@ export class IllegalCharacterError extends LexError {
 }
 
 /**
- * Class of errors for when the lexer unexpectedly reaches the end of the buffer
- * @extends {module:errors~LexError}
- */
-export class EndOfInputError extends LexError {
-  constructor (...args) {
-    super(...args)
-    this.name = 'EndOfInputError'
-  }
-}
-
-/**
  * Class of errors for when the lexer encounters an uncompleted token
  * @extends {module:errors~LexError}
  */
@@ -125,22 +114,6 @@ export class GraphError extends Error {
   constructor (...args) {
     super(...args)
     this.name = 'GraphError'
-  }
-}
-
-/**
- * Class of errors for when a class that is meant to be 'abstract' (i.e. not
- * directly instantiated) is directly instatiated
- */
-export class AbstractClassError extends Error {
-  /**
-   * Create an AbstractClassError
-   * @param {String} className
-   * @param {String} message
-   */
-  constructor (className, message) {
-    super(`<${className}> class is abstract and cannot be directly instantiated.  ${message}`)
-    this.name = 'AbstractClassError'
   }
 }
 

@@ -21,12 +21,12 @@ class WebBackend extends InMemoryBackend {
    *     fetching RDF resources
    * @param {Object} [options.headers={}] - headers to send with each request
    */
-  constructor ({ graph = new Graph(), proxyUri = '', headers = {} }) {
+  constructor ({ graph = new Graph(), proxyUri = '', headers = {} } = {}) {
     super(graph)
     this.proxyUri = proxyUri
     this.headers = headers
-    this.lockedGraphs = new Set()
-    this.on('queryDone', () => this.lockedGraphs.clear())
+    this.loadedGraphs = new Set()
+    this.on('queryDone', () => this.loadedGraphs.clear())
   }
 
   async getObjects (subject, predicate) {
@@ -50,12 +50,13 @@ class WebBackend extends InMemoryBackend {
     if (!graphName) {
       return false
     }
-    if (this.lockedGraphs.has(graphName)) {
+    if (this.loadedGraphs.has(graphName)) {
       return true
     }
-    const graph = await fetchGraph(graphName, this.proxyUri, this.headers)
+    const { proxyUri, headers } = this
+    const graph = await fetchGraph(graphName, { proxyUri, headers })
     this.graph = this.graph.union(graph)
-    this.lockedGraphs.add(graphName)
+    this.loadedGraphs.add(graphName)
     return true
   }
 }

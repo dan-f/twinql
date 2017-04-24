@@ -7,7 +7,7 @@
  * The class for abstract syntax tree nodes
  */
 export class AST {
-  constructor ({ type, ...attrs}) {
+  constructor ({ type, ...attrs }) {
     if (!type) {
       throw new Error('Must provide a `type` when constructing a AST')
     }
@@ -24,7 +24,7 @@ export const queryNode = ({ prefixList, context, contextSensitiveQuery }) => new
 })
 
 export const prefixNode = ({ name, uri }) => new AST({
-  type: 'prefixNode',
+  type: 'prefix',
   name,
   uri
 })
@@ -58,7 +58,7 @@ export const intermediateMatchNode = ({ predicate, nodeSpecifier }) => new AST({
 })
 
 export const traversalNode = ({ selectorList }) => new AST({
-  type: 'traversalNode',
+  type: 'traversal',
   selectorList
 })
 

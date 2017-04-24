@@ -38,10 +38,10 @@ import Immutable from 'immutable'
  * @extends external:Immutable.Record
  */
 export const Node = Immutable.Record({
-  termType: '',
-  value: '',
-  language: '',
-  datatype: ''
+  termType: null,
+  value: null,
+  language: null,
+  datatype: null
 })
 
 /**

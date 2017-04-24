@@ -10,9 +10,6 @@ export const tokenTypes = {
   LSQUARE: 'LSQUARE',
   RSQUARE: 'RSQUARE',
   STRLIT: 'STRLIT',
-  ON: 'ON',
-  DEL: 'DEL',
-  INS: 'INS',
   ARROW: 'ARROW',
   PREFIX: 'PREFIX',
   EOF: 'EOF'
@@ -20,8 +17,6 @@ export const tokenTypes = {
 
 // A mapping from token text to token types
 export const keywords = {
-  '-': tokenTypes.DEL,
-  '+': tokenTypes.INS,
   '=>': tokenTypes.ARROW,
   '@prefix': tokenTypes.PREFIX
 }
@@ -43,7 +38,7 @@ export const NAME_REGEX = /^[a-zA-Z]+[a-zA-Z0-9_-]*$/
 export const PREFIXED_URI_REGEX = /^([a-zA-Z]+[a-zA-Z0-9_-]*):(.+)$/
 
 export class Token {
-  constructor(type, value, line, column) {
+  constructor (type, value, line, column) {
     this.type = type
     this.value = value
     this.line = line
