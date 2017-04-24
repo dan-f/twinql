@@ -73,16 +73,23 @@ describe('web-backend', () => {
 
         const graphName = 'https://alice.com/graph'
         const backend = new WebBackend()
-        expect(backend.loadedGraphs).not.to.haveMember(graphName)
-        return expect(backend.ensureGraphLoaded(graphName)).to.eventually.be.true
+        expect(backend.loadingGraphs).not.to.have.property(graphName)
+        const concurrentLoadGraphs = Promise.all([
+          backend.ensureGraphLoaded(graphName),
+          backend.ensureGraphLoaded(graphName)
+        ])
+        return expect(concurrentLoadGraphs).to.be.fulfilled
           .then(() => {
-            expect(backend.loadedGraphs).to.haveMember(graphName)
+            expect(backend.loadingGraphs).to.have.property(graphName)
             const alice = Node({ termType: 'NamedNode', value: `${graphName}#alice` })
             const knows = Node({ termType: 'NamedNode', value: 'http://xmlns.com/foaf/0.1/knows' })
             const bob = Node({ termType: 'NamedNode', value: 'https://bob.com/graph#bob' })
             const spot = Node({ termType: 'NamedNode', value: 'https://alice.com/graph#spot' })
             expect(backend.graph.match({ subject: alice, predicate: knows}))
               .to.equal(nodeSet([bob, spot]))
+            // Even though we asked for the graph to be loaded concurrently,
+            // `fetchGraph` should only be called once, since the request were
+            // for the same resource.
             expect(fetchGraphSpy).to.have.been.calledOnce
           })
       })
@@ -90,10 +97,10 @@ describe('web-backend', () => {
       it('resets the list of loaded graphs at the end of a query', () => {
         const backend = new WebBackend()
         const graphName = 'https://example.com/graph'
-        backend.loadedGraphs.add(graphName)
+        backend.loadingGraphs[graphName] = Promise.resolve(true)
         backend.trigger('queryDone')
-        expect(backend.loadedGraphs).not.to.haveMember(graphName)
-        expect(backend.loadedGraphs.size).to.equal(0)
+        expect(backend.loadingGraphs).not.to.have.property(graphName)
+        expect(Object.keys(backend.loadingGraphs).length).to.equal(0)
       })
     })
   })

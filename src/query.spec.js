@@ -43,7 +43,6 @@ describe('query', () => {
 
     it('can run a query with a matching subject node specifier', () => {
       nock('https://alice.com/')
-        .persist()
         .get('/graph')
         .reply(200, aliceTtl, { 'content-type': 'text/turtle' })
 
@@ -68,7 +67,6 @@ describe('query', () => {
 
     it('can run a query with a matching graph node specifier', () => {
       nock('https://alice.com/')
-        .persist()
         .get('/graph')
         .reply(200, aliceTtl, { 'content-type': 'text/turtle' })
 

@@ -25,8 +25,8 @@ class WebBackend extends InMemoryBackend {
     super(graph)
     this.proxyUri = proxyUri
     this.headers = headers
-    this.loadedGraphs = new Set()
-    this.on('queryDone', () => this.loadedGraphs.clear())
+    this.loadingGraphs = {}
+    this.on('queryDone', () => { this.loadingGraphs = {} })
   }
 
   async getObjects (subject, predicate) {
@@ -50,14 +50,15 @@ class WebBackend extends InMemoryBackend {
     if (!graphName) {
       return false
     }
-    if (this.loadedGraphs.has(graphName)) {
-      return true
+    if (this.loadingGraphs[graphName]) {
+      return this.loadingGraphs[graphName]
     }
     const { proxyUri, headers } = this
-    const graph = await fetchGraph(graphName, { proxyUri, headers })
-    this.graph = this.graph.union(graph)
-    this.loadedGraphs.add(graphName)
-    return true
+    this.loadingGraphs[graphName] = fetchGraph(graphName, { proxyUri, headers })
+      .then(graph => {
+        this.graph = this.graph.union(graph)
+      })
+    return this.loadingGraphs[graphName]
   }
 }
 
