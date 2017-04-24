@@ -1,5 +1,8 @@
 # twinql
 
+[![Build Status](https://travis-ci.org/dan-f/twinql.svg?branch=master)](https://travis-ci.org/dan-f/twinql)
+[![Coverage Status](https://coveralls.io/repos/github/dan-f/twinql/badge.svg)](https://coveralls.io/github/dan-f/twinql)
+
 A graph query language for the semantic web.  Not [SPARQL](https://www.w3.org/TR/sparql11-query/).
 
 
