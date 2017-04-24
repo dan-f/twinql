@@ -20,6 +20,8 @@
     "build:lib": "babel src -d lib",
     "build:dev": "webpack --config webpack.dev.config.js --watch",
     "build:umd": "webpack --config webpack.prod.config.js",
+    "coverage:report": "nyc report",
+    "coverage:coveralls": "nyc report --reporter=text-lcov | coveralls",
     "postversion": "git push --follow-tags",
     "prepublish": "npm run build"
   },
