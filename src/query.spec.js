@@ -135,8 +135,8 @@ describe('query', () => {
           },
           '@id': 'https://alice.com/graph#alice',
           'foaf:knows': [
-            'https://bob.com/graph#bob',
-            'https://alice.com/graph#spot'
+            { '@id': 'https://bob.com/graph#bob' },
+            { '@id': 'https://alice.com/graph#spot' }
           ]
         })
     })
@@ -258,6 +258,28 @@ describe('query', () => {
           },
           '@id': 'https://alice.com/graph#alice',
           'foaf:homepage': []
+        })
+    })
+
+    it('formats named nodes using objects with an "@id" property', () => {
+      nock('https://alice.com/')
+        .get('/graph')
+        .reply(200, aliceTtl, { 'content-type': 'text/turtle' })
+
+      const queryString = `
+        @prefix pim http://www.w3.org/ns/pim/space#
+
+        https://alice.com/graph#alice {
+          pim:storage
+        }
+      `
+      return expect(query(backend, queryString))
+        .to.eventually.eql({
+          '@context': {
+            pim: 'http://www.w3.org/ns/pim/space#'
+          },
+          '@id': 'https://alice.com/graph#alice',
+          'pim:storage': { '@id': 'https://alice.com/storageSpace/' }
         })
     })
 
