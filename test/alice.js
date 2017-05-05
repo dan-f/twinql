@@ -1,6 +1,7 @@
 export default `
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dbo: <http://dbpedia.org/ontology/Dog> .
+@prefix pim: <http://www.w3.org/ns/pim/space#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <#alice> a foaf:Person
@@ -9,6 +10,7 @@ export default `
   ; foaf:knows <#spot>
   ; foaf:age "24"^^xsd:integer
   ; foaf:based_near "Estados Unidos"@es
+  ; pim:storage <https://alice.com/storageSpace/>
   .
 
 <#spot> a dbo:Dog
