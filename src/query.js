@@ -84,15 +84,12 @@ class QueryEngine {
     const nodeSpec = csq.nodeSpecifier
     const nodes = await this.specifiedNodes(nodeSet([contextNode]), nodeSpec)
     const results = await Promise.all(nodes.map(node => this.traverse(node, csq.traversal)))
-    if (!results.length) {
-      return {}
-    }
     const { type, contextType } = nodeSpec
     if (type === 'emptyNodeSpecifier' || (type === 'matchingNodeSpecifier' && contextType === 'subject')) {
-      return results[0]
+      return results.length ? results[0] : {}
     } else if (type === 'matchingNodeSpecifier' && contextType === 'graph') {
       return {
-        '@id': contextNode.get('value'),
+        ...formatNode(contextNode),
         '@graph': results
       }
     }
