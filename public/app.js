@@ -28,7 +28,7 @@ https://dan-f.databox.me/profile/card#me {
 `@prefix book  http://www.w3.org/2002/01/bookmark#
 @prefix dc    http://purl.org/dc/elements/1.1/
 @prefix rdf   http://www.w3.org/1999/02/22-rdf-syntax-ns#
-@prefix solid http://www.w3.org/ns/solid/terms#
+@prefix solid http://solid.github.io/vocab/solid-terms.ttl#
 
 https://dan-f.databox.me/profile/card#me {
   solid:publicTypeIndex => ( rdf:type solid:TypeRegistration
@@ -47,7 +47,7 @@ https://dan-f.databox.me/profile/card#me {
 @prefix ldp   http://www.w3.org/ns/ldp#
 @prefix rdf   http://www.w3.org/1999/02/22-rdf-syntax-ns#
 @prefix sioc  http://rdfs.org/sioc/ns#
-@prefix solid http://www.w3.org/ns/solid/terms#
+@prefix solid http://solid.github.io/vocab/solid-terms.ttl#
 
 https://deiu.me/profile#me {
   solid:publicTypeIndex => ( rdf:type solid:TypeRegistration
