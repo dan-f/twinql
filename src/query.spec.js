@@ -136,7 +136,7 @@ describe('query', () => {
             foaf: 'http://xmlns.com/foaf/0.1/'
           },
           '@id': 'https://alice.com/graph#alice',
-          'foaf:name': "Alice"
+          'foaf:name': { "@value": "Alice" }
         })
     })
 
@@ -191,11 +191,11 @@ describe('query', () => {
           'foaf:knows': [
             {
               '@id': 'https://bob.com/graph#bob',
-              'foaf:name': 'Bob'
+              'foaf:name': { '@value': 'Bob' }
             },
             {
               '@id': 'https://alice.com/graph#spot',
-              'foaf:name': 'Spot'
+              'foaf:name': { '@value': 'Spot' }
             }
           ]
         })
@@ -235,7 +235,7 @@ describe('query', () => {
             },
             {
               '@id': 'https://alice.com/graph#spot',
-              'foaf:name': 'Spot'
+              'foaf:name': { '@value': 'Spot' }
             }
           ]
         })
