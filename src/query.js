@@ -354,9 +354,6 @@ function formatNode (node) {
   if (termType === 'NamedNode') {
     return { '@id': value }
   }
-  if (!datatype && !language) {
-    return value
-  }
   const formatted = { '@value': value }
   if (datatype) {
     formatted['@type'] = datatype
