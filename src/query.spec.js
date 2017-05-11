@@ -241,6 +241,41 @@ describe('query', () => {
         })
     })
 
+    it('returns errors in the response body for graph matching', () => {
+      nock('https://alice.com/')
+        .get('/graph')
+        .reply(200, aliceTtl, { 'content-type': 'text/turtle' })
+        .get('/Preferences/publicTypeIndex.ttl')
+        .reply(401)
+
+      const queryString = `
+        @prefix rdf   http://www.w3.org/1999/02/22-rdf-syntax-ns#
+        @prefix solid http://solid.github.io/vocab/solid-terms.ttl#
+
+        https://alice.com/graph#alice {
+          solid:publicTypeIndex => ( rdf:type solid:TypeRegistration ) {
+            solid:instance
+          }
+        }
+      `
+      return expect(query(backend, queryString))
+        .to.eventually.eql({
+          '@context': {
+            rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            solid: 'http://solid.github.io/vocab/solid-terms.ttl#'
+          },
+          '@id': 'https://alice.com/graph#alice',
+          'solid:publicTypeIndex': {
+            '@id': 'https://alice.com/Preferences/publicTypeIndex.ttl',
+            '@error': {
+              type: 'HttpError',
+              status: 401,
+              message: 'Unauthorized'
+            }
+          }
+        })
+    })
+
     it(`maps a single edge to null when it doesn't exist on its subject`, () => {
       nock('https://alice.com/')
         .get('/graph')

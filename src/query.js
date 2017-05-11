@@ -82,7 +82,15 @@ class QueryEngine {
    */
   async contextSensitiveQuery (contextNode, csq) {
     const nodeSpec = csq.nodeSpecifier
-    const nodes = await this.specifiedNodes(nodeSet([contextNode]), nodeSpec)
+    let nodes
+    try {
+      nodes = await this.specifiedNodes(nodeSet([contextNode]), nodeSpec)
+    } catch (error) {
+      return {
+        ...formatNode(contextNode),
+        '@error': formatErrorForResponse(error)
+      }
+    }
     const results = await Promise.all(nodes.map(node => this.traverse(node, csq.traversal)))
     const { type, contextType } = nodeSpec
     if (type === 'emptyNodeSpecifier' || (type === 'matchingNodeSpecifier' && contextType === 'subject')) {
