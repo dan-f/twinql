@@ -65,6 +65,41 @@ describe('query', () => {
         })
     })
 
+    it('can run a query with a matching node specifier on a list of subjects', () => {
+      nock('https://alice.com/')
+        .get('/graph')
+        .reply(200, aliceTtl, { 'content-type': 'text/turtle' })
+
+      nock('https://bob.com/')
+        .get('/graph')
+        .reply(200, bobTtl, { 'content-type': 'text/turtle' })
+
+      const queryString = `
+        @prefix rdf http://www.w3.org/1999/02/22-rdf-syntax-ns#
+        @prefix foaf http://xmlns.com/foaf/0.1/
+
+        https://alice.com/graph#alice {
+          [ foaf:knows ] ( rdf:type foaf:Person ) {
+            foaf:name
+          }
+        }
+      `
+      return expect(query(backend, queryString))
+        .to.eventually.eql({
+          '@context': {
+            rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            foaf: 'http://xmlns.com/foaf/0.1/'
+          },
+          '@id': 'https://alice.com/graph#alice',
+          'foaf:knows': [
+            {
+              '@id': 'https://bob.com/graph#bob',
+              'foaf:name': { '@value': 'Bob' }
+            }
+          ]
+        })
+    })
+
     it('can run a query with a matching graph node specifier', () => {
       nock('https://alice.com/')
         .get('/graph')
