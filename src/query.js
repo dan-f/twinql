@@ -271,10 +271,11 @@ class QueryEngine {
           : null
         break
       case 'multiEdge':
+        const isNotEmpty = obj => Object.keys(obj).length > 0
         const nextObjects = await this.getNextObjectsForSelector(node, edge)
         subQueryResults = (await all(nextObjects.map(async node =>
           this.contextSensitiveQuery(node, contextSensitiveQuery)
-        ))).filter(result => result != null)
+        ))).filter(isNotEmpty)
         break
       default:
         throw new QueryError(`Unrecognized edge type.  Expected 'singleEdge' or 'multiEdge' but got '${edge.type}'.`)
