@@ -45,13 +45,13 @@ Response:
     "foaf": "http://xmlns.com/foaf/0.1/"
   },
   "@id": "https://dan-f.databox.me/profile/card#me",
-  "foaf:name": "Daniel Friedman",
-  "foaf:img": "https://dan-f.databox.me/profile/me.jpg",
+  "foaf:name": { "@value": "Daniel Friedman" },
+  "foaf:img": { "@value": "https://dan-f.databox.me/profile/me.jpg"},
   "foaf:knows": [
     {
       "@id": "https://deiu.me/profile#me",
-      "foaf:name": "Andrei Vlad Sambra",
-      "foaf:img": "https://deiu.me/avatar.jpg"
+      "foaf:name": {"@value": "Andrei Vlad Sambra" },
+      "foaf:img": {"@value": "https://deiu.me/avatar.jpg" }
     },
     {
       /* ... */
@@ -82,26 +82,26 @@ Response:
 
 ## Roadmap
 
-- add tests once design has settled down
-- implement on the server (possibly using a delegted agent)
-- implement ordering and pagination
+- ordering and pagination
+- response streaming
+- Mutation API
 
 ### Other cool things
 
 - Create higher level tooling for offline-first querying and realtime updates
 - Create bindings for common UI libraries
   - e.g. connected React component
-- Mutation API
 
 ## Development
 
 This reference implementation of twinql happens to be built in JS for quick
-prototyping, but a safer language is recommended when implementing on a server
-or for a production use case.
+prototyping, but a safer language is recommended when implementing for a
+production use case.
 
 ## Contributing
 
-If you want to contribute to this reference implementation, first reach out by creating a Github Issue to make sure we're on the same page :smile:
+If you want to contribute to this reference implementation, first reach out by
+creating a Github Issue to make sure we're on the same page :smile:
 
 Assuming you want to mess with the code, just do the following:
 
@@ -128,7 +128,8 @@ $ npm start
 4) Build the lib
 
 ```bash
-# You can run webpack in watch mode to rebuild the UMD bundle on file changes.  This is useful when prototyping with the demo site.
+# You can run webpack in watch mode to rebuild the UMD bundle on file changes.
+# This is useful when prototyping with the demo site.
 $ npm run build:dev
 
 # To test the minified UMD build:
