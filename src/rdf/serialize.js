@@ -2,6 +2,7 @@ import N3 from 'n3'
 
 import Graph from './graph'
 import { Node } from './node'
+import Quad from './quad'
 import { iterObj } from '../util'
 
 const STR_TYPE = 'http://www.w3.org/2001/XMLSchema#string'
@@ -45,7 +46,7 @@ export function parseNQuads (text, graphName = null) {
         if (graphName && !newQuad.graph) {
           newQuad.graph = Node({ termType: 'NamedNode', value: graphName })
         }
-        quads.push(newQuad)
+        quads.push(Quad(newQuad))
       } else {
         resolve(Graph.fromQuads(quads))
       }

@@ -1,11 +1,11 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import chaiImmutable from 'chai-immutable'
-import Immutable from 'immutable'
 import sinonChai from 'sinon-chai'
 
 import { AST } from '../src/lang/ast'
 import { Node, nodeSet } from '../src/rdf/node'
+import { immutableHashCode } from '../src/util'
 
 global.expect = chai.expect
 
@@ -103,7 +103,7 @@ chai.use((_chai, utils) => {
   })
 
   Assertion.addMethod('map', function (...list) {
-    utils.flag(this, 'indexKey', Immutable.List(list))
+    utils.flag(this, 'indexKey', immutableHashCode(...list))
   })
 
   Assertion.addMethod('nodes', function (nodes) {

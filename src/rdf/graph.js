@@ -1,7 +1,8 @@
 import Immutable from 'immutable'
 
 import { GraphError } from '../errors'
-import { Node, nodeSet } from './node'
+import { nodeSet } from './node'
+import { immutableHashCode } from '../util'
 
 /**
  * Provides functionality for dealing with RDF graphs.
@@ -43,24 +44,17 @@ class Graph {
     let poIndex = Immutable.Map()
     let pogIndex = Immutable.Map()
     for (let { subject, predicate, object, graph } of quads) {
-      spIndex = spIndex.update(Immutable.List([ subject, predicate ]), nodes =>
+      spIndex = spIndex.update(immutableHashCode(subject, predicate), nodes =>
         nodes ? nodes.add(object) : nodeSet([object])
       )
-      poIndex = poIndex.update(Immutable.List([ predicate, object ]), nodes =>
+      poIndex = poIndex.update(immutableHashCode(predicate, object), nodes =>
         nodes ? nodes.add(subject) : nodeSet([subject])
       )
-      pogIndex = pogIndex.update(Immutable.List([ predicate, object, graph ]), nodes =>
+      pogIndex = pogIndex.update(immutableHashCode(predicate, object, graph), nodes =>
         nodes ? nodes.add(subject) : nodeSet([subject])
       )
     }
-    return new Graph(spIndex, poIndex, pogIndex, Immutable.Set(quads.map(quad =>
-      Immutable.Map({
-        subject: Node(quad.subject),
-        predicate: Node(quad.predicate),
-        object: Node(quad.object),
-        graph: Node(quad.graph)
-      })
-    )))
+    return new Graph(spIndex, poIndex, pogIndex, Immutable.Set(quads))
   }
 
   /**
@@ -76,13 +70,13 @@ class Graph {
    */
   match ({ subject, predicate, object, graph }) {
     if (subject && predicate) {
-      return this.spIndex.get(Immutable.List([ subject, predicate ])) || nodeSet([])
+      return this.spIndex.get(immutableHashCode(subject, predicate), nodeSet([]))
     }
     if (predicate && object && !graph) {
-      return this.poIndex.get(Immutable.List([ predicate, object ])) || nodeSet([])
+      return this.poIndex.get(immutableHashCode(predicate, object), nodeSet([]))
     }
     if (predicate && object && graph) {
-      return this.pogIndex.get(Immutable.List([ predicate, object, graph ])) || nodeSet([])
+      return this.pogIndex.get(immutableHashCode(predicate, object, graph), nodeSet([]))
     }
     throw new GraphError(
       'Unsupported graph match.  ' +
