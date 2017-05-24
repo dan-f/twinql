@@ -22,10 +22,12 @@ describe('graph', () => {
         object: Node({ termType: 'Literal', value: 'foo', language: null, datatype: null }),
         graph: Node({ termType: 'NamedNode', value: GRAPH, language: null, datatype: null })
       }
-      expect(Graph.fromQuads([quad]))
+      const graph = Graph.fromQuads([quad])
+      expect(graph)
         .index('spIndex').to.map(quad.subject, quad.predicate).to.nodes([quad.object])
         .index('poIndex').to.map(quad.predicate, quad.object).to.nodes([quad.subject])
         .index('pogIndex').to.map(quad.predicate, quad.object, quad.graph).to.nodes([quad.subject])
+      expect(graph.quads).to.eql(Immutable.Set.of(Immutable.fromJS(quad)))
     })
 
     it('can union with another graph', () => {
@@ -53,6 +55,10 @@ describe('graph', () => {
         .index('poIndex').to.map(quad2.predicate, quad2.object).to.nodes([subject])
         .index('pogIndex').to.map(quad1.predicate, quad1.object, graph).to.nodes([subject])
         .index('pogIndex').to.map(quad2.predicate, quad2.object, graph).to.nodes([subject])
+      expect(unioned.quads).to.eql(Immutable.Set([
+        Immutable.fromJS(quad1),
+        Immutable.fromJS(quad2)
+      ]))
     })
 
     describe('matching', () => {

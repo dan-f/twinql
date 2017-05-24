@@ -1,7 +1,7 @@
 import Immutable from 'immutable'
 
 import { GraphError } from '../errors'
-import { nodeSet } from './node'
+import { Node, nodeSet } from './node'
 
 /**
  * Provides functionality for dealing with RDF graphs.
@@ -23,11 +23,13 @@ class Graph {
    * @param {module:rdf/graph~Index} spIndex - the (subject, predicate) index
    * @param {module:rdf/graph~Index} poIndex - the (predicate, object) index
    * @param {module:rdf/graph~Index} pogIndex - the (predicate, object, graph) index
+   * @param {external:Immutable.Set<module:rdf/quad~Quad>} quads - the set of quads
    */
-  constructor (spIndex, poIndex, pogIndex) {
+  constructor (spIndex, poIndex, pogIndex, quads) {
     this.spIndex = spIndex || new Immutable.Map()
     this.poIndex = poIndex || new Immutable.Map()
     this.pogIndex = pogIndex || new Immutable.Map()
+    this.quads = quads || new Immutable.Set()
   }
 
   /**
@@ -51,7 +53,14 @@ class Graph {
         nodes ? nodes.add(subject) : nodeSet([subject])
       )
     }
-    return new Graph(spIndex, poIndex, pogIndex)
+    return new Graph(spIndex, poIndex, pogIndex, Immutable.Set(quads.map(quad =>
+      Immutable.Map({
+        subject: Node(quad.subject),
+        predicate: Node(quad.predicate),
+        object: Node(quad.object),
+        graph: Node(quad.graph)
+      })
+    )))
   }
 
   /**
@@ -90,7 +99,8 @@ class Graph {
     return new Graph(
       this.spIndex.mergeDeep(other.spIndex),
       this.poIndex.mergeDeep(other.poIndex),
-      this.pogIndex.mergeDeep(other.pogIndex)
+      this.pogIndex.mergeDeep(other.pogIndex),
+      this.quads.union(other.quads)
     )
   }
 }
