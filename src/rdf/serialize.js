@@ -70,7 +70,7 @@ export function serializeNQuads (graph) {
         toNQuadTerm(quad.get('subject')),
         toNQuadTerm(quad.get('predicate')),
         toNQuadTerm(quad.get('object')),
-        toNQuadTerm(quad.get('graph'))
+        quad.get('graph') ? toNQuadTerm(quad.get('graph')) : undefined
       )
     )
     writer.end((err, results) => {
