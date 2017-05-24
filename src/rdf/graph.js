@@ -53,14 +53,7 @@ class Graph {
         nodes ? nodes.add(subject) : nodeSet([subject])
       )
     }
-    return new Graph(spIndex, poIndex, pogIndex, Immutable.Set(quads.map(quad =>
-      Immutable.Map({
-        subject: Node(quad.subject),
-        predicate: Node(quad.predicate),
-        object: Node(quad.object),
-        graph: Node(quad.graph)
-      })
-    )))
+    return new Graph(spIndex, poIndex, pogIndex, Immutable.Set(quads))
   }
 
   /**

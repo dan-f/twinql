@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 
 import Graph from './graph'
 import { Node, nodeSet } from './node'
+import Quad from './quad'
 
 describe('graph', () => {
   describe('Graph', () => {
@@ -16,12 +17,12 @@ describe('graph', () => {
     })
 
     it('can be constructed from an iterable of quads', () => {
-      const quad = {
+      const quad = Quad({
         subject: Node({ termType: 'NamedNode', value: `${GRAPH}#subj`, language: null, datatype: null }),
         predicate: Node({ termType: 'NamedNode', value: `${GRAPH}#is`, language: null, datatype: null }),
         object: Node({ termType: 'Literal', value: 'foo', language: null, datatype: null }),
         graph: Node({ termType: 'NamedNode', value: GRAPH, language: null, datatype: null })
-      }
+      })
       const graph = Graph.fromQuads([quad])
       expect(graph)
         .index('spIndex').to.map(quad.subject, quad.predicate).to.nodes([quad.object])
@@ -33,18 +34,18 @@ describe('graph', () => {
     it('can union with another graph', () => {
       const subject = Node({ termType: 'NamedNode', value: `${GRAPH}#subj`, language: null, datatype: null })
       const graph = Node({ termType: 'NamedNode', value: GRAPH, language: null, datatype: null })
-      const quad1 = {
+      const quad1 = Quad({
         subject,
         predicate: Node({ termType: 'NamedNode', value: `${GRAPH}#is`, language: null, datatype: null }),
         object: Node({ termType: 'Literal', value: 'foo', language: null, datatype: null }),
         graph
-      }
-      const quad2 = {
+      })
+      const quad2 = Quad({
         subject,
         predicate: Node({ termType: 'NamedNode', value: `${GRAPH}#isAlso`, language: null, datatype: null }),
         object: Node({ termType: 'Literal', value: 'bar', language: null, datatype: null }),
         graph
-      }
+      })
       const graph1 = Graph.fromQuads([quad1])
       const graph2 = Graph.fromQuads([quad2])
       const unioned = graph1.union(graph2)

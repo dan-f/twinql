@@ -4,6 +4,7 @@ import Immutable from 'immutable'
 import Graph from './graph'
 import { Node } from './node'
 import { parseNQuads, serializeNQuads } from './serialize'
+import Quad from './quad'
 
 describe('serialize', () => {
   describe('parseNQuads', () => {
@@ -140,12 +141,12 @@ describe('serialize', () => {
     })
 
     it('serializes a quad', () => {
-      const quads = [{
+      const quads = [Quad({
         subject: Node({ termType: 'NamedNode', value: 'https://example.com/graph#subj' }),
         predicate: Node({ termType: 'NamedNode', value: 'https://example.com/vocab#term' }),
         object: Node({ termType: 'Literal', value: 'nice' }),
         graph: Node({ termType: 'NamedNode', value: 'https://example.com/graph' })
-      }]
+      })]
       expect(serializeNQuads(Graph.fromQuads(quads)))
         .to.eventually.equal(
           `<https://example.com/graph#subj> <https://example.com/vocab#term> "nice" <https://example.com/graph>.\n`
@@ -153,12 +154,12 @@ describe('serialize', () => {
     })
 
     it('serializes a literal with datatype', () => {
-      const quads = [{
+      const quads = [Quad({
         subject: Node({ termType: 'NamedNode', value: 'https://example.com/graph#subj' }),
         predicate: Node({ termType: 'NamedNode', value: 'https://example.com/vocab#term' }),
         object: Node({ termType: 'Literal', value: '123', datatype: 'http://www.w3.org/2001/XMLSchema#integer' }),
         graph: Node({ termType: 'NamedNode', value: 'https://example.com/graph' })
-      }]
+      })]
       expect(serializeNQuads(Graph.fromQuads(quads)))
         .to.eventually.equal(
           `<https://example.com/graph#subj> <https://example.com/vocab#term> "123"^^<http://www.w3.org/2001/XMLSchema#integer> <https://example.com/graph>.\n`
@@ -166,12 +167,12 @@ describe('serialize', () => {
     })
 
     it('serializes a literal with language', () => {
-      const quads = [{
+      const quads = [Quad({
         subject: Node({ termType: 'NamedNode', value: 'https://example.com/graph#subj' }),
         predicate: Node({ termType: 'NamedNode', value: 'https://example.com/vocab#term' }),
         object: Node({ termType: 'Literal', value: 'hola', language: 'es' }),
         graph: Node({ termType: 'NamedNode', value: 'https://example.com/graph' })
-      }]
+      })]
       expect(serializeNQuads(Graph.fromQuads(quads)))
         .to.eventually.equal(
           `<https://example.com/graph#subj> <https://example.com/vocab#term> "hola"@es <https://example.com/graph>.\n`
