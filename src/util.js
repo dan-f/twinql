@@ -1,3 +1,5 @@
+import Immutable from 'immutable'
+
 /**
  * Iterates over key, value pairs in an object
  * @param {Object} obj
@@ -8,3 +10,5 @@ export function * iterObj (obj) {
     yield [k, obj[k]]
   }
 }
+
+export const immutableHashCode = (...vals) => Immutable.List(vals).hashCode()
