@@ -140,6 +140,18 @@ describe('serialize', () => {
         .to.eventually.equal('')
     })
 
+    it('serializes a triple', () => {
+      const quads = [Quad({
+        subject: Node({ termType: 'NamedNode', value: 'https://example.com/graph#subj' }),
+        predicate: Node({ termType: 'NamedNode', value: 'https://example.com/vocab#term' }),
+        object: Node({ termType: 'Literal', value: 'nice' })
+      })]
+      expect(serializeNQuads(Graph.fromQuads(quads)))
+        .to.eventually.equal(
+          `<https://example.com/graph#subj> <https://example.com/vocab#term> "nice".\n`
+        )
+    })
+
     it('serializes a quad', () => {
       const quads = [Quad({
         subject: Node({ termType: 'NamedNode', value: 'https://example.com/graph#subj' }),
