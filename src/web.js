@@ -1,8 +1,7 @@
 import 'isomorphic-fetch'
 
 import { HttpError, RdfParseError } from './errors'
-import Graph from './rdf/graph'
-import { parseQuads } from './rdf/quad'
+import { parseNQuads } from './rdf/serialize'
 
 const TIMEOUT = 5000
 
@@ -31,7 +30,7 @@ export async function fetchGraph (graphName, { proxyUri = '', headers = {}, time
   }
   const text = await response.text()
   try {
-    return Graph.fromQuads(await parseQuads(graphName, text))
+    return parseNQuads(text, graphName)
   } catch (e) {
     throw new RdfParseError(e.message)
   }
